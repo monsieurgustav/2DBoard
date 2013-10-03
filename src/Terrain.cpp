@@ -7,6 +7,8 @@
 //
 
 #include "Terrain.h"
+#include "Constants.h"
+
 
 Terrain::Terrain()
 { }
@@ -35,7 +37,7 @@ void Terrain::Cell::setGroundId(int id)
 
 int Terrain::Cell::wallId() const
 {
-    return mGround < 0 ? (-mGround-1) : 0;
+    return mGround < 0 ? (-mGround-1) : -1;
 }
 
 void Terrain::Cell::setWallId(int id)
@@ -53,4 +55,14 @@ void Terrain::Cell::setItemId(int id)
 {
     assert(id >= 0);
     mItem = id;
+}
+
+unsigned char Terrain::availableMoves(int x, int y)
+{
+    unsigned char result = 0;
+    result |= (y > 0 && cell(x, y-1).wallId() < 0) ? DIR_UP : 0;
+    result |= (y < mHeight-1 && cell(x, y+1).wallId() < 0) ? DIR_DOWN : 0;
+    result |= (x > 0 && cell(x-1, y).wallId() < 0) ? DIR_LEFT : 0;
+    result |= (x < mWidth-1 && cell(x+1, y).wallId() < 0) ? DIR_RIGHT : 0;
+    return result;
 }

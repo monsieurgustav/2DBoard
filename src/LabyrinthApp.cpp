@@ -1,35 +1,66 @@
+#include "TerrainLoader.h"
+#include "Actor.h"
+
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Tween.h"
 #include "cinder/Timeline.h"
-
-#include "TerrainLoader.h"
 
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+
+Terrain gTerrain;
+Actor * gActor;
+
+
 class LabyrinthApp : public AppNative {
   public:
 	void setup();
-	void mouseDown( MouseEvent event );	
+	void keyDown(KeyEvent event);
+	void keyUp(KeyEvent event);
 	void update();
 	void draw();
 };
 
-Anim<Vec2f> center;
-Terrain gTerrain;
 
 void LabyrinthApp::setup()
 {
-    center = Vec2f(5, 5);
-    timeline().apply(&center, Vec2f(250, 250), 5.f);
     gTerrain = loadFrom(loadResource("terrain.ter"));
+    gActor = new Actor(timeline());
+    gActor->setStartPosition(ci::Vec2i(3, 3));
 }
 
-void LabyrinthApp::mouseDown( MouseEvent event )
+void LabyrinthApp::keyDown(KeyEvent event)
 {
+    Direction direction = DIR_NONE;
+    switch(event.getCode())
+    {
+        case KeyEvent::KEY_UP:
+            direction = DIR_UP;
+            break;
+        case KeyEvent::KEY_DOWN:
+            direction = DIR_DOWN;
+            break;
+        case KeyEvent::KEY_LEFT:
+            direction = DIR_LEFT;
+            break;
+        case KeyEvent::KEY_RIGHT:
+            direction = DIR_RIGHT;
+            break;
+    }
+
+    const ci::Vec2i actorPos = gActor->logicalPosition();
+    direction = (direction & gTerrain.availableMoves(actorPos.x, actorPos.y)) ?
+                direction : DIR_NONE;
+    gActor->setNextMove(direction);
+}
+
+void LabyrinthApp::keyUp(KeyEvent event)
+{
+    gActor->setNextMove(DIR_NONE);
 }
 
 void LabyrinthApp::update()
@@ -38,9 +69,8 @@ void LabyrinthApp::update()
 
 void LabyrinthApp::draw()
 {
-	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) );
-    gl::drawSolidCircle(center, 2.f);
+    gl::drawSolidCircle(Vec2f(200, 200)+ci::Vec2f(50,50)*gActor->animatedPosition(), 2.f);
 }
 
 CINDER_APP_NATIVE( LabyrinthApp, RendererGl )

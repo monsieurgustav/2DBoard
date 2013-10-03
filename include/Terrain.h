@@ -46,7 +46,10 @@ public:
 public:
     Terrain();
     Terrain(int width, int height);
-    
+
+    /*
+     *  Accessors + iterators
+     */
     const Cell & cell(int x, int y) const
     {
         assert(x < mWidth);
@@ -99,6 +102,13 @@ public:
         assert(y < mHeight);
         return mCells.begin() + (y+1)*mWidth;
     }
+
+    /*
+     *  Query
+     */
+
+    /// returns a bitfield of DIR_UP/DOWN/LEFT/RIGHT from the given cell
+    unsigned char availableMoves(int x, int y);
 
 private:
     int mWidth, mHeight;
