@@ -40,7 +40,20 @@ void Actor::move(Direction d)
     {
         return;
     }
+
+    if(mStartMoveCb)
+    {
+        mStartMoveCb(mPosition);
+    }
+
     mPosition = toDirection(mPosition, d);
     mTimeline.apply(&mAnimatedPosition, ci::Vec2f(mPosition), 1.f)
-             .finishFn([this]() { this->move(this->mNextMove); });
+             .finishFn([this]()
+                       {
+                           if(mFinishMoveCb)
+                           {
+                               mFinishMoveCb(mPosition);
+                           }
+                           move(mNextMove);
+                       });
 }

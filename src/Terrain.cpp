@@ -21,7 +21,7 @@ Terrain::Terrain(int width, int height)
 
 Terrain::Cell::Cell()
 : mGround(0),
-  mItem(-1)
+  mTrigger(0)
 { }
 
 int Terrain::Cell::groundId() const
@@ -46,15 +46,15 @@ void Terrain::Cell::setWallId(int id)
     mGround = -1-id;
 }
 
-int Terrain::Cell::itemId() const
+int Terrain::Cell::triggerId() const
 {
-    return mItem;
+    return mTrigger;
 }
 
-void Terrain::Cell::setItemId(int id)
+void Terrain::Cell::setTriggerId(int id)
 {
-    assert(id >= 0);
-    mItem = id;
+    assert(id > 0);
+    mTrigger = id;
 }
 
 unsigned char Terrain::availableMoves(int x, int y)

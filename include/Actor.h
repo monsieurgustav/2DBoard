@@ -13,6 +13,9 @@
 
 #include "cinder/Tween.h"
 
+#include <functional>
+
+
 namespace cinder {
     class Timeline;
 }
@@ -49,6 +52,18 @@ public:
      */
     void setNextMove(Direction d);
 
+    /// Given function called at the start of a new move.
+    void setStartMoveCallback(const std::function<void(ci::Vec2i)> & cb)
+    {
+        mStartMoveCb = cb;
+    }
+
+    /// Given function called at the end of the current move.
+    void setFinishMoveCallback(const std::function<void(ci::Vec2i)> & cb)
+    {
+        mFinishMoveCb = cb;
+    }
+
 private:
 
     /// Animate the actor to go in the given direction
@@ -60,6 +75,9 @@ private:
 
     ci::Vec2i mPosition;
     Direction mNextMove;
+
+    std::function<void(ci::Vec2i)> mStartMoveCb;
+    std::function<void(ci::Vec2i)> mFinishMoveCb;
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "TerrainLoader.h"
 
 #include <fstream>
+#include <sstream>
 #include <cassert>
 #include <boost/filesystem/path.hpp>
 
@@ -18,8 +19,25 @@ Terrain loadFrom(ci::DataSourceRef input)
     Terrain result(width, height);
     for(auto & cell : result)
     {
-        int value;
-        stream >> value;
+        int value = 0;
+        int trigger = 0;
+
+        std::string seq;
+        stream >> seq;
+        //std::getline(stream, seq, ' ');
+        auto separator = seq.find(':');
+
+        if(separator == std::string::npos)
+        {
+            std::istringstream parse(seq);
+            parse >> value;
+        }
+        else
+        {
+            seq[separator] = ' ';
+            std::istringstream parse(seq);
+            parse >> value >> trigger;
+        }
         if(stream.fail())
         {
             throw BadFormatException();
@@ -32,6 +50,11 @@ Terrain loadFrom(ci::DataSourceRef input)
         else
         {
             cell.setGroundId(value);
+        }
+
+        if(trigger)
+        {
+            cell.setTriggerId(trigger);
         }
     }
     return result;

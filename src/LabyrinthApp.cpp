@@ -1,5 +1,6 @@
 #include "TerrainLoader.h"
 #include "Actor.h"
+#include "EventManager.h"
 
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
@@ -12,6 +13,7 @@ using namespace ci::app;
 using namespace std;
 
 
+EventManager gEventManager;
 Terrain gTerrain;
 Actor * gActor;
 
@@ -29,8 +31,16 @@ class LabyrinthApp : public AppNative {
 void LabyrinthApp::setup()
 {
     gTerrain = loadFrom(loadResource("terrain.ter"));
+
+    gEventManager.setEvent(1, [this] { console() << "event" << std::endl; });
+
     gActor = new Actor(timeline());
     gActor->setStartPosition(ci::Vec2i(3, 3));
+    gActor->setFinishMoveCallback([] (ci::Vec2i position)
+        {
+            int trigger = gTerrain.cell(position.x, position.y).triggerId();
+            gEventManager.runEvent(trigger);
+        });
 }
 
 void LabyrinthApp::keyDown(KeyEvent event)

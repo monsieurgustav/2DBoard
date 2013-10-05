@@ -21,11 +21,8 @@ public:
     public:
         Cell();
 
-        /// Has a pickable item on it?
-        bool hasItem() const;
-
-        int itemId() const;
-        void setItemId(int id);
+        int triggerId() const;
+        void setTriggerId(int id);
 
         int groundId() const;
         void setGroundId(int id);
@@ -35,7 +32,7 @@ public:
 
     private:
         int mGround;
-        int mItem;
+        int mTrigger;
     };
 
 public:
