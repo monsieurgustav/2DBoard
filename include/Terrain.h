@@ -22,19 +22,22 @@ public:
         Cell();
 
         int triggerId() const;
+
+        /// id > 0
         void setTriggerId(int id);
 
         int groundId() const;
-        void setGroundId(int id);
+        
+        /// id > 0
+        void setGroundId(int id, bool blocking);
 
-        int wallId() const;
-        void setWallId(int id);
+        bool blocking() const;
 
     private:
         int mGround;
         int mTrigger;
     };
-
+    
 public:
     typedef std::vector<Cell> Data;
     typedef Data::iterator iterator;
@@ -44,6 +47,16 @@ public:
     Terrain();
     Terrain(int width, int height);
 
+    int width() const
+    {
+        return mWidth;
+    }
+
+    int height() const
+    {
+        return mHeight;
+    }
+    
     /*
      *  Accessors + iterators
      */

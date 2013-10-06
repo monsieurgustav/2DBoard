@@ -24,7 +24,6 @@ Terrain loadFrom(ci::DataSourceRef input)
 
         std::string seq;
         stream >> seq;
-        //std::getline(stream, seq, ' ');
         auto separator = seq.find(':');
 
         if(separator == std::string::npos)
@@ -43,16 +42,8 @@ Terrain loadFrom(ci::DataSourceRef input)
             throw BadFormatException();
         }
 
-        if(value < 0)
-        {
-            cell.setWallId(-value-1);
-        }
-        else
-        {
-            cell.setGroundId(value);
-        }
-
-        if(trigger)
+        cell.setGroundId(std::abs(value), value<0);
+        if(trigger>0)
         {
             cell.setTriggerId(trigger);
         }

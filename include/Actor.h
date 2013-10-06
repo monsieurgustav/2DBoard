@@ -26,8 +26,27 @@ class Actor
 public:
     Actor(ci::Timeline & timeline)
     : mTimeline(timeline),
-      mNextMove(DIR_NONE)
-    { }
+      mNextMove(DIR_NONE),
+      mTileId(0)
+    {
+        memset(&mDirectionToTileId, 0, sizeof(mDirectionToTileId));
+    }
+
+    void setTileId(int id, Direction dir)
+    {
+        assert(id>0);
+        mDirectionToTileId[dir] = id;
+        if(dir==DIR_NONE)
+        {
+            mTileId = id;
+        }
+    }
+
+    /// The tile to display the actor
+    int tileId() const
+    {
+        return mTileId;
+    }
 
     /// Used to display the actor
     ci::Vec2f animatedPosition() const
@@ -75,6 +94,9 @@ private:
 
     ci::Vec2i mPosition;
     Direction mNextMove;
+
+    int mTileId;
+    int mDirectionToTileId[DIR_MAX]; // DIR_* are not contiguous, not a big deal
 
     std::function<void(ci::Vec2i)> mStartMoveCb;
     std::function<void(ci::Vec2i)> mFinishMoveCb;

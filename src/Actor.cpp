@@ -36,6 +36,7 @@ void Actor::setNextMove(Direction d)
 
 void Actor::move(Direction d)
 {
+    mTileId = mDirectionToTileId[d];
     if(d == DIR_NONE)
     {
         return;
@@ -47,7 +48,7 @@ void Actor::move(Direction d)
     }
 
     mPosition = toDirection(mPosition, d);
-    mTimeline.apply(&mAnimatedPosition, ci::Vec2f(mPosition), 1.f)
+    mTimeline.apply(&mAnimatedPosition, ci::Vec2f(mPosition), .5f)
              .finishFn([this]()
                        {
                            if(mFinishMoveCb)

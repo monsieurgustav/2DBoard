@@ -16,6 +16,7 @@ enum Direction
     DIR_DOWN  =2,
     DIR_LEFT  =4,
     DIR_RIGHT =8,
+    DIR_MAX
 };
 
 #endif
