@@ -11,6 +11,7 @@
 
 
 #include "cinder/gl/Texture.h"
+#include "cinder/Tween.h"
 
 #include <unordered_map>
 
@@ -21,8 +22,9 @@ class Drawer
 {
 public:
 
-    Drawer(int tileSize)
-     : mTileSize(tileSize), mWindowWidth(0), mWindowHeight(0)
+    Drawer(ci::Timeline & timeline, int tileSize)
+     : mTimeline(timeline), mTileSize(tileSize),
+       mWindowWidth(0), mWindowHeight(0)
     { }
 
     /// Adjust the display to the new window size.
@@ -39,22 +41,18 @@ public:
     }
 
     /// Bind a animated tile to a terrain id.
-    void setTile(int tileId, ci::gl::TextureRef image, int height, int begin, int end)
-    {
-        // vs2010 does not support generalized initializer.
-        // mIdToTile[tileId] = {image, height, begin, end};
-        Tile tile = {image, height, begin, end};
-        mIdToTile[tileId] = tile;
-    }
-
+    void setTile(int tileId, ci::gl::TextureRef image, int height,
+                 int begin, int end);
+    
     void draw(const Terrain & terrain, const Actor & actor) const;
 
 private:
     struct Tile;
     void drawTile(const Tile & tile, ci::Vec2f position,
-                  ci::Vec2f offset, ci::Vec2f scale) const;
+                  ci::Vec2f offset, float scale) const;
 
 private:
+    ci::Timeline & mTimeline;
     int mTileSize;
     int mWindowWidth, mWindowHeight;
 
@@ -63,6 +61,7 @@ private:
         ci::gl::TextureRef image;
         int height;
         int begin, end;
+        ci::Anim<int> current;
     };
     std::unordered_map<int, Tile> mIdToTile;
 };

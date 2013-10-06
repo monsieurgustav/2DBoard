@@ -19,4 +19,8 @@ enum Direction
     DIR_MAX
 };
 
+
+/// How long to move to one tile.
+const float MOVE_DURATION = .5f;
+
 #endif

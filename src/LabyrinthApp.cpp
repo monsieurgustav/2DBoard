@@ -18,6 +18,7 @@ using namespace std;
 EventManager gEventManager;
 Terrain gTerrain;
 Actor * gActor = nullptr;
+Direction gActorDirection = DIR_NONE;
 Drawer * gDrawer = nullptr;
 
 
@@ -36,7 +37,7 @@ void LabyrinthApp::setup()
     gl::enableAlphaTest();
     gl::disableDepthRead();
     
-    gDrawer = new Drawer(32);
+    gDrawer = new Drawer(timeline(), 32);
     gDrawer->setWindowSize(getWindowWidth(), getWindowHeight());
 
     // ground square tiles
@@ -72,36 +73,35 @@ void LabyrinthApp::setup()
 
 void LabyrinthApp::keyDown(KeyEvent event)
 {
-    Direction direction = DIR_NONE;
+    gActorDirection = DIR_NONE;
     switch(event.getCode())
     {
         case KeyEvent::KEY_UP:
-            direction = DIR_UP;
+            gActorDirection = DIR_UP;
             break;
         case KeyEvent::KEY_DOWN:
-            direction = DIR_DOWN;
+            gActorDirection = DIR_DOWN;
             break;
         case KeyEvent::KEY_LEFT:
-            direction = DIR_LEFT;
+            gActorDirection = DIR_LEFT;
             break;
         case KeyEvent::KEY_RIGHT:
-            direction = DIR_RIGHT;
+            gActorDirection = DIR_RIGHT;
             break;
     }
-
-    const ci::Vec2i actorPos = gActor->logicalPosition();
-    direction = (direction & gTerrain.availableMoves(actorPos.x, actorPos.y)) ?
-                direction : DIR_NONE;
-    gActor->setNextMove(direction);
 }
 
 void LabyrinthApp::keyUp(KeyEvent event)
 {
-    gActor->setNextMove(DIR_NONE);
+    gActorDirection = DIR_NONE;
 }
 
 void LabyrinthApp::update()
 {
+    const ci::Vec2i actorPos = gActor->logicalPosition();
+    unsigned char available = gTerrain.availableMoves(actorPos.x, actorPos.y);
+    Direction direction = (gActorDirection & available) ? gActorDirection : DIR_NONE;
+    gActor->setNextMove(direction);
 }
 
 void LabyrinthApp::draw()

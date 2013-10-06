@@ -17,7 +17,6 @@
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		6A0AC6A017FDEBF5005E1D5C /* Actor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A0AC69E17FDEBF5005E1D5C /* Actor.cpp */; };
 		6A9B138C17F36CD700BD1BF9 /* TerrainLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B138B17F36CD700BD1BF9 /* TerrainLoader.cpp */; };
-		6A9B139A17F37C7700BD1BF9 /* terrain.ter in Resources */ = {isa = PBXBuildFile; fileRef = 6A9B139917F37C7700BD1BF9 /* terrain.ter */; };
 		6A9B139D17F37E0500BD1BF9 /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B139B17F37E0500BD1BF9 /* Terrain.cpp */; };
 		6ACED74E17FF7F960068294E /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED74C17FF7F960068294E /* EventManager.cpp */; };
 		6ACED7531800592E0068294E /* Drawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED7521800592E0068294E /* Drawer.cpp */; };
@@ -68,7 +67,6 @@
 		6A9B138A17F369AC00BD1BF9 /* TerrainLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TerrainLoader.h; path = ../include/TerrainLoader.h; sourceTree = "<group>"; };
 		6A9B138B17F36CD700BD1BF9 /* TerrainLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TerrainLoader.cpp; path = ../src/TerrainLoader.cpp; sourceTree = "<group>"; };
 		6A9B138D17F371CE00BD1BF9 /* cinder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cinder.xcodeproj; path = ../../cinder_0.8.5_mac/xcode/cinder.xcodeproj; sourceTree = "<group>"; };
-		6A9B139917F37C7700BD1BF9 /* terrain.ter */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = terrain.ter; path = ../resources/terrain.ter; sourceTree = "<group>"; };
 		6A9B139B17F37E0500BD1BF9 /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = ../src/Terrain.cpp; sourceTree = "<group>"; };
 		6A9B139F17F3842200BD1BF9 /* Actor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = ../include/Actor.h; sourceTree = "<group>"; };
 		6ACED74817FF7E2F0068294E /* EventManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventManager.h; path = ../include/EventManager.h; sourceTree = "<group>"; };
@@ -186,7 +184,6 @@
 			children = (
 				726D2348FA0B4C6D811A75B2 /* CinderApp.icns */,
 				E34C2A8CC2194439AC30D059 /* Info.plist */,
-				6A9B139917F37C7700BD1BF9 /* terrain.ter */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -294,7 +291,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				075E1A0A1AD7474FB95B50CD /* CinderApp.icns in Resources */,
-				6A9B139A17F37C7700BD1BF9 /* terrain.ter in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

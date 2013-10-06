@@ -24,13 +24,10 @@ namespace
 
 void Actor::setNextMove(Direction d)
 {
+    mNextMove = d;
     if(mAnimatedPosition.isComplete())
     {
         move(d);
-    }
-    else
-    {
-        mNextMove = d;
     }
 }
 
@@ -48,7 +45,7 @@ void Actor::move(Direction d)
     }
 
     mPosition = toDirection(mPosition, d);
-    mTimeline.apply(&mAnimatedPosition, ci::Vec2f(mPosition), .5f)
+    mTimeline.apply(&mAnimatedPosition, ci::Vec2f(mPosition), MOVE_DURATION)
              .finishFn([this]()
                        {
                            if(mFinishMoveCb)
