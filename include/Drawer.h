@@ -41,7 +41,10 @@ public:
     /// Bind a animated tile to a terrain id.
     void setTile(int tileId, ci::gl::TextureRef image, int height, int begin, int end)
     {
-        mIdToTile[tileId] = {image, height, begin, end};
+        // vs2010 does not support generalized initializer.
+        // mIdToTile[tileId] = {image, height, begin, end};
+        Tile tile = {image, height, begin, end};
+        mIdToTile[tileId] = tile;
     }
 
     void draw(const Terrain & terrain, const Actor & actor) const;

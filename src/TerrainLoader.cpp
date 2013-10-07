@@ -17,8 +17,12 @@ Terrain loadFrom(ci::DataSourceRef input)
     }
 
     Terrain result(width, height);
-    for(auto & cell : result)
+    // vs2010 does not support range based for loop
+    // for(auto & cell : result)
+    for(auto it=result.begin(), end=result.end(); it != end; ++it)
     {
+        auto & cell = *it;
+
         int value = 0;
         int trigger = 0;
 

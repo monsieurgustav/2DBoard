@@ -5,6 +5,7 @@
 
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
+#include "cinder/ImageIo.h"
 #include "cinder/Tween.h"
 #include "cinder/Timeline.h"
 
@@ -53,7 +54,7 @@ void LabyrinthApp::setup()
     gDrawer->setTile(6, charTexture, 48, 4, 8);
     gDrawer->setTile(7, charTexture, 48, 1);
 
-    gTerrain = loadFrom(loadResource("terrain.ter"));
+    gTerrain = loadFrom(loadAsset("terrain.ter"));
 
     gActor = new Actor(timeline());
     gActor->setTileId(3, DIR_UP);
