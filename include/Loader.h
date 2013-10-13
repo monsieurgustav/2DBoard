@@ -28,6 +28,9 @@ public:
     { }
 };
 
+ci::gl::TextureRef loadTexture(ci::app::App * app,
+                               const std::string & imageName);
+
 /**
  *  @brief Read a level file.
  *  @throw BadFormatException

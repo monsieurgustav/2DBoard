@@ -33,6 +33,7 @@ struct Level
     Drawer drawer;
     EventManager eventManager;
     std::deque<IWidgetPtr> widgets;
+    std::deque<IWidgetPtr> pendingWidgets;
 
     Level(Board &&board, Actor &&player, Drawer &&drawer, EventManager &&mgr);
 

@@ -79,6 +79,13 @@ void LabyrinthApp::keyUp(KeyEvent event)
 
 void LabyrinthApp::update()
 {
+    // include pending widgets
+    gLevel->widgets.insert(gLevel->widgets.end(),
+                           gLevel->pendingWidgets.begin(),
+                           gLevel->pendingWidgets.end());
+    gLevel->pendingWidgets.clear();
+
+    // update
     auto newEnd = std::remove_if(gLevel->widgets.begin(), gLevel->widgets.end(),
                                  [] (IWidgetPtr &w)
                                  {

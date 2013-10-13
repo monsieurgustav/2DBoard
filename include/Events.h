@@ -9,8 +9,11 @@
 #ifndef __Labyrinth__Events__
 #define __Labyrinth__Events__
 
+#include "EventManager.h"
+
 #include <memory>
 #include <string>
+#include <queue>
 
 class IWidget;
 class Board;
@@ -34,6 +37,15 @@ namespace ev
     void setPlayerTiles(Actor & player, int stillTile, ci::Vec4i movingTiles);
 
     Level loadLevel(ci::app::App * app, const std::string & filename);
+
+    void displayImage(ci::app::App * app, Level & level,
+                      const std::string & filename, float duration);
+
+    // utilities
+    void wait(ci::app::App * app, Level & level, float duration);
+
+    void serial(ci::app::App * app, Level & level,
+                std::queue<EventManager::Event> events);
 }
 
 #endif

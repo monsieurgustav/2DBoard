@@ -83,6 +83,6 @@ public:
     }
 };
 
-typedef std::unique_ptr<IWidget> IWidgetPtr;
+typedef std::shared_ptr<IWidget> IWidgetPtr;
 
 #endif

@@ -13,31 +13,26 @@
 #include <unordered_map>
 
 
-ci::gl::TextureRef nameToTexture(ci::app::App * app,
-                                 const std::string & imageName,
-                                 std::unordered_map<std::string,
-                                                    ci::gl::TextureRef> &cache)
+std::unordered_map<std::string, ci::gl::TextureRef> gCache;
+
+ci::gl::TextureRef loadTexture(ci::app::App * app,
+                                 const std::string & imageName)
 {
-    auto found = cache.find(imageName);
-    if(found == cache.end())
+    auto found = gCache.find(imageName);
+    if(found == gCache.end())
     {
         const auto asset = app->loadAsset(imageName);
         auto tex = ci::gl::Texture::create(loadImage(asset));
         tex->setMagFilter(GL_NEAREST);
-        found = cache.insert(std::make_pair(imageName, tex)).first;
+        found = gCache.insert(std::make_pair(imageName, tex)).first;
     }
     return found->second;
 }
 
-static void loadEvent(EventManager & mgr, std::istream & stream)
+static EventManager::Event loadEvent(std::istream & stream)
 {
-    int triggerId;
     std::string eventName;
-    stream >> triggerId >> eventName;
-    if(stream.fail() || triggerId < 1)
-    {
-        return;
-    }
+    stream >> eventName;
 
     std::function<void (ci::app::App *, Level &)> event;
     if(eventName == "setTrigger")
@@ -45,7 +40,7 @@ static void loadEvent(EventManager & mgr, std::istream & stream)
         int posX, posY, newTriggerId;
         stream >> posX >> posY >> newTriggerId;
         const auto position = ci::Vec2i(posX, posY);
-        event = [position, newTriggerId](ci::app::App *app, Level &level)
+        return [position, newTriggerId](ci::app::App *app, Level &level)
         {
             ev::setTrigger(level.board, position, newTriggerId);
         };
@@ -55,7 +50,7 @@ static void loadEvent(EventManager & mgr, std::istream & stream)
         int posX, posY, tileId;
         stream >> posX >> posY >> tileId;
         const auto position = ci::Vec2i(posX, posY);
-        event = [position, tileId](ci::app::App *app, Level &level)
+        return [position, tileId](ci::app::App *app, Level &level)
         {
             ev::setGround(level.board, position, std::abs(tileId), tileId<0);
         };
@@ -65,7 +60,7 @@ static void loadEvent(EventManager & mgr, std::istream & stream)
         int tileStill, tileUp, tileRight, tileDown, tileLeft;
         stream >> tileStill >> tileUp >> tileRight >> tileDown >> tileLeft;
         ci::Vec4i movingTiles(tileUp, tileRight, tileDown, tileLeft);
-        event = [tileStill, movingTiles](ci::app::App *app, Level &level)
+        return [tileStill, movingTiles](ci::app::App *app, Level &level)
         {
             ev::setPlayerTiles(level.player, tileStill, movingTiles);
         };
@@ -74,7 +69,7 @@ static void loadEvent(EventManager & mgr, std::istream & stream)
     {
         std::string levelName;
         stream >> levelName;
-        event = [levelName](ci::app::App *app, Level &level)
+        return [levelName](ci::app::App *app, Level &level)
         {
             level.destroy(app);
             try {
@@ -86,7 +81,16 @@ static void loadEvent(EventManager & mgr, std::istream & stream)
             }
         };
     }
-    mgr.setEvent(triggerId, event);
+    else if(eventName == "wait")
+    {
+        float duration;
+        stream >> duration;
+        return [duration](ci::app::App *app, Level &level)
+        {
+            ev::wait(app, level, duration);
+        };
+    }
+    return EventManager::Event();
 }
 
 Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
@@ -176,7 +180,6 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
     }
     int tileId, tileHeight, beginIndex, endIndex;
     std::string imageName;
-    std::unordered_map<std::string, ci::gl::TextureRef> cache;
     while(stream.peek() != '[')
     {
         std::getline(stream, line);
@@ -186,7 +189,7 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
         {
             throw BadFormatException();
         }
-        auto tex = nameToTexture(app, imageName, cache);
+        auto tex = loadTexture(app, imageName);
         s >> endIndex;
         if(s.fail())
         {
@@ -210,7 +213,52 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
     {
         std::getline(stream, line);
         std::istringstream s(line);
-        loadEvent(eventManager, s);
+
+        int triggerId;
+        s >> triggerId;
+        if(s.fail())
+        {
+            continue;
+        }
+
+        // look for a parenthesis (event list)
+        while(s.peek() == ' ')
+        {
+            s.get();
+        }
+        if(s.peek() == '(')
+        {
+            s.get();  // skip '('
+            std::queue<EventManager::Event> events;
+            while(1)
+            {
+                const auto event = loadEvent(s);
+                if(event)
+                {
+                    events.push(event);
+                }
+                std::getline(stream, line);
+                if(line[0] == ')' || stream.eof())
+                {
+                    break;
+                }
+                std::istringstream other(line);
+                s.swap(other);
+            }
+            const auto serialEvent = [events](ci::app::App *app, Level &level)
+            {
+                ev::serial(app, level, events);
+            };
+            eventManager.setEvent(triggerId, serialEvent);
+        }
+        else
+        {
+            const auto event = loadEvent(s);
+            if(event)
+            {
+                eventManager.setEvent(triggerId, event);
+            }
+        }
     }
 
     Level result(std::move(terrain),
