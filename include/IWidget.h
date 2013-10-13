@@ -9,6 +9,8 @@
 #ifndef Labyrinth_IWidget_h
 #define Labyrinth_IWidget_h
 
+#include "cinder/app/App.h"
+
 
 /// An interface to intercept draw/update/interaction.
 class IWidget

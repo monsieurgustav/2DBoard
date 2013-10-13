@@ -1,57 +1,57 @@
 //
-//  Terrain.cpp
+//  Board.cpp
 //  Labyrinth
 //
 //  Created by Guillaume Buisson on 25/09/13.
 //
 //
 
-#include "Terrain.h"
+#include "Board.h"
 #include "Constants.h"
 
 
-Terrain::Terrain()
+Board::Board()
 { }
 
-Terrain::Terrain(int width, int height)
+Board::Board(int width, int height)
 : mWidth(width),
   mHeight(height),
   mCells(width*height)
 { }
 
-Terrain::Cell::Cell()
+Board::Cell::Cell()
 : mGround(0),
   mTrigger(0)
 { }
 
-int Terrain::Cell::groundId() const
+int Board::Cell::groundId() const
 {
     return std::abs(mGround);
 }
 
-void Terrain::Cell::setGroundId(int id, bool blocking)
+void Board::Cell::setGroundId(int id, bool blocking)
 {
     assert(id > 0);
     mGround = blocking ? -id : id;
 }
 
-bool Terrain::Cell::blocking() const
+bool Board::Cell::blocking() const
 {
     return mGround < 0;
 }
 
-int Terrain::Cell::triggerId() const
+int Board::Cell::triggerId() const
 {
     return mTrigger;
 }
 
-void Terrain::Cell::setTriggerId(int id)
+void Board::Cell::setTriggerId(int id)
 {
     assert(id > 0);
     mTrigger = id;
 }
 
-unsigned char Terrain::availableMoves(int x, int y)
+unsigned char Board::availableMoves(int x, int y)
 {
     unsigned char result = 0;
     result |= (y > 0 && !cell(x, y-1).blocking()) ? DIR_UP : 0;

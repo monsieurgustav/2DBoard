@@ -1,13 +1,13 @@
 //
-//  TerrainLoader.h
+//  Loader.h
 //  Labyrinth
 //
 //  Created by Guillaume Buisson on 25/09/13.
 //
 //
 
-#ifndef Labyrinth_TerrainLoader_h
-#define Labyrinth_TerrainLoader_h
+#ifndef Labyrinth_Loader_h
+#define Labyrinth_Loader_h
 
 #include "cinder/DataSource.h"
 
@@ -19,7 +19,7 @@ namespace cinder {
     }
 }
 
-class Level;
+struct Level;
 
 class BadFormatException : std::runtime_error
 {

@@ -15,7 +15,7 @@
 
 #include <unordered_map>
 
-class Terrain;
+class Board;
 class Actor;
 
 class Drawer
@@ -44,7 +44,7 @@ public:
     void setTile(int tileId, ci::gl::TextureRef image, int height,
                  int begin, int end);
     
-    void draw(const Terrain & terrain, const Actor & actor) const;
+    void draw(const Board & terrain, const Actor & actor) const;
 
 private:
     struct Tile;

@@ -2,6 +2,8 @@
 #include "Level.h"
 
 #include "cinder/gl/Texture.h"
+#include "cinder/ImageIo.h"
+#include "cinder/app/App.h"
 
 #include <fstream>
 #include <sstream>
@@ -47,7 +49,7 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
         throw BadFormatException();
     }
 
-    Terrain terrain(width, height);
+    Board terrain(width, height);
     // vs2010 does not support range based for loop
     // for(auto & cell : terrain)
     for(auto it=terrain.begin(), end=terrain.end(); it != end; ++it)

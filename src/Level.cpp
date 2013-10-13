@@ -8,6 +8,8 @@
 
 #include "Level.h"
 
+#include "cinder/app/App.h"
+
 
 void Level::prepare(ci::app::App * app)
 {

@@ -1,19 +1,19 @@
 //
-//  Terrain.h
+//  Board.h
 //  Labyrinth
 //
 //  Created by Guillaume Buisson on 25/09/13.
 //
 //
 
-#ifndef Labyrinth_Terrain_h
-#define Labyrinth_Terrain_h
+#ifndef Labyrinth_Board_h
+#define Labyrinth_Board_h
 
 #include <vector>
 #include <cassert>
 
 
-class Terrain
+class Board
 {
 public:
     class Cell
@@ -44,8 +44,8 @@ public:
     typedef Data::const_iterator const_iterator;
 
 public:
-    Terrain();
-    Terrain(int width, int height);
+    Board();
+    Board(int width, int height);
 
     int width() const
     {

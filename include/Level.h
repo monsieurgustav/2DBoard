@@ -10,7 +10,7 @@
 #define __Labyrinth__Level__
 
 
-#include "Terrain.h"
+#include "Board.h"
 #include "Actor.h"
 #include "Drawer.h"
 #include "EventManager.h"
@@ -24,7 +24,7 @@ namespace ci = cinder;
 
 struct Level
 {
-    Terrain terrain;
+    Board terrain;
     Actor player;
     Drawer drawer;
     EventManager eventManager;

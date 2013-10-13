@@ -8,7 +8,7 @@
 
 #include "Drawer.h"
 
-#include "Terrain.h"
+#include "Board.h"
 #include "Actor.h"
 
 #include "cinder/Timeline.h"
@@ -41,7 +41,7 @@ namespace
     }
 }
 
-void Drawer::draw(const Terrain &terrain, const Actor &actor) const
+void Drawer::draw(const Board &terrain, const Actor &actor) const
 {
     // integer scale to preserve pixels
     const int scalei = std::min(mWindowWidth/mTileSize/terrain.width(),
