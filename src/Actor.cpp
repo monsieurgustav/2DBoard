@@ -45,8 +45,8 @@ void Actor::move(Direction d)
     }
 
     mPosition = toDirection(mPosition, d);
-    mTimeline.apply(&mAnimatedPosition, ci::Vec2f(mPosition), MOVE_DURATION)
-             .finishFn([this]()
+    mTimeline->apply(&mAnimatedPosition, ci::Vec2f(mPosition), MOVE_DURATION)
+              .finishFn([this]()
                        {
                            if(mFinishMoveCb)
                            {

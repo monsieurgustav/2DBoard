@@ -17,6 +17,6 @@
 6 actor.png 48 0 4
 7 actor.png 48 8 12
 [triggers]
-1 draw intro.png
-2 changeLevel level2.lvl
-3 setTrigger 4 2 2
+3 loadLevel level2.lvl
+2 setTrigger 0 4 3
+1 setGround 1 1 -2

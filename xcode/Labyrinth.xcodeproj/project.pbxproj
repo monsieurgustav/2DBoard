@@ -17,8 +17,9 @@
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		6A0AC6A017FDEBF5005E1D5C /* Actor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A0AC69E17FDEBF5005E1D5C /* Actor.cpp */; };
 		6A1527AA1809BFE900C6B5C9 /* Level.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A1527A81809BFE900C6B5C9 /* Level.cpp */; };
+		6A7B844E180AB527006759D5 /* Events.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A7B844D180AB527006759D5 /* Events.cpp */; };
+		6A7B8450180ABCD5006759D5 /* Board.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A7B844F180ABCD5006759D5 /* Board.cpp */; };
 		6A9B138C17F36CD700BD1BF9 /* Loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B138B17F36CD700BD1BF9 /* Loader.cpp */; };
-		6A9B139D17F37E0500BD1BF9 /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B139B17F37E0500BD1BF9 /* Terrain.cpp */; };
 		6ACED74E17FF7F960068294E /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED74C17FF7F960068294E /* EventManager.cpp */; };
 		6ACED7531800592E0068294E /* Drawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED7521800592E0068294E /* Drawer.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -66,11 +67,12 @@
 		6A0AC69E17FDEBF5005E1D5C /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actor.cpp; path = ../src/Actor.cpp; sourceTree = "<group>"; };
 		6A1527A81809BFE900C6B5C9 /* Level.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Level.cpp; path = ../src/Level.cpp; sourceTree = "<group>"; };
 		6A1527AB1809C02100C6B5C9 /* Level.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Level.h; path = ../include/Level.h; sourceTree = "<group>"; };
-		6A9B138917F365F500BD1BF9 /* Terrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Terrain.h; path = ../include/Terrain.h; sourceTree = "<group>"; };
+		6A7B844D180AB527006759D5 /* Events.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Events.cpp; path = ../src/Events.cpp; sourceTree = "<group>"; };
+		6A7B844F180ABCD5006759D5 /* Board.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Board.cpp; path = ../src/Board.cpp; sourceTree = "<group>"; };
+		6A7B8451180ABCDC006759D5 /* Board.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Board.h; path = ../include/Board.h; sourceTree = "<group>"; };
 		6A9B138A17F369AC00BD1BF9 /* Loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Loader.h; path = ../include/Loader.h; sourceTree = "<group>"; };
 		6A9B138B17F36CD700BD1BF9 /* Loader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Loader.cpp; path = ../src/Loader.cpp; sourceTree = "<group>"; };
 		6A9B138D17F371CE00BD1BF9 /* cinder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cinder.xcodeproj; path = ../../cinder_0.8.5_mac/xcode/cinder.xcodeproj; sourceTree = "<group>"; };
-		6A9B139B17F37E0500BD1BF9 /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = ../src/Terrain.cpp; sourceTree = "<group>"; };
 		6A9B139F17F3842200BD1BF9 /* Actor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = ../include/Actor.h; sourceTree = "<group>"; };
 		6ACED74817FF7E2F0068294E /* EventManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventManager.h; path = ../include/EventManager.h; sourceTree = "<group>"; };
 		6ACED74C17FF7F960068294E /* EventManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventManager.cpp; path = ../src/EventManager.cpp; sourceTree = "<group>"; };
@@ -114,10 +116,11 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				6A7B844F180ABCD5006759D5 /* Board.cpp */,
+				6A7B844D180AB527006759D5 /* Events.cpp */,
 				6A9B138B17F36CD700BD1BF9 /* Loader.cpp */,
 				6A1527A81809BFE900C6B5C9 /* Level.cpp */,
 				315650AFFF71481AB15B1006 /* LabyrinthApp.cpp */,
-				6A9B139B17F37E0500BD1BF9 /* Terrain.cpp */,
 				6A0AC69E17FDEBF5005E1D5C /* Actor.cpp */,
 				6ACED74C17FF7F960068294E /* EventManager.cpp */,
 				6ACED7521800592E0068294E /* Drawer.cpp */,
@@ -174,8 +177,8 @@
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				6A7B8451180ABCDC006759D5 /* Board.h */,
 				6ACED750180058FC0068294E /* Drawer.h */,
-				6A9B138917F365F500BD1BF9 /* Terrain.h */,
 				BE1A1C7C16A043D1A5596514 /* Resources.h */,
 				1BACC0CF3875431790F0CF05 /* Labyrinth_Prefix.pch */,
 				6A9B138A17F369AC00BD1BF9 /* Loader.h */,
@@ -312,12 +315,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A7B844E180AB527006759D5 /* Events.cpp in Sources */,
 				DD101F25E0DF40DDBFE769A7 /* LabyrinthApp.cpp in Sources */,
+				6A7B8450180ABCD5006759D5 /* Board.cpp in Sources */,
 				6ACED74E17FF7F960068294E /* EventManager.cpp in Sources */,
 				6A1527AA1809BFE900C6B5C9 /* Level.cpp in Sources */,
 				6A9B138C17F36CD700BD1BF9 /* Loader.cpp in Sources */,
 				6ACED7531800592E0068294E /* Drawer.cpp in Sources */,
-				6A9B139D17F37E0500BD1BF9 /* Terrain.cpp in Sources */,
 				6A0AC6A017FDEBF5005E1D5C /* Actor.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

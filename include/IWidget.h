@@ -11,6 +11,8 @@
 
 #include "cinder/app/App.h"
 
+#include <memory>
+
 
 /// An interface to intercept draw/update/interaction.
 class IWidget
@@ -80,5 +82,7 @@ public:
         return false;
     }
 };
+
+typedef std::unique_ptr<IWidget> IWidgetPtr;
 
 #endif

@@ -23,7 +23,7 @@ class Drawer
 public:
 
     Drawer(ci::Timeline & timeline, int tileSize)
-     : mTimeline(timeline), mTileSize(tileSize),
+     : mTimeline(&timeline), mTileSize(tileSize),
        mWindowWidth(0), mWindowHeight(0)
     { }
 
@@ -52,7 +52,7 @@ private:
                   ci::Vec2f offset, float scale) const;
 
 private:
-    ci::Timeline & mTimeline;
+    ci::Timeline * mTimeline;
     int mTileSize;
     int mWindowWidth, mWindowHeight;
 

@@ -1,5 +1,6 @@
 #include "Loader.h"
 #include "Level.h"
+#include "Events.h"
 
 #include "cinder/gl/Texture.h"
 #include "cinder/ImageIo.h"
@@ -26,6 +27,66 @@ ci::gl::TextureRef nameToTexture(ci::app::App * app,
         found = cache.insert(std::make_pair(imageName, tex)).first;
     }
     return found->second;
+}
+
+static void loadEvent(EventManager & mgr, std::istream & stream)
+{
+    int triggerId;
+    std::string eventName;
+    stream >> triggerId >> eventName;
+    if(stream.fail() || triggerId < 1)
+    {
+        return;
+    }
+
+    std::function<void (ci::app::App *, Level &)> event;
+    if(eventName == "setTrigger")
+    {
+        int posX, posY, newTriggerId;
+        stream >> posX >> posY >> newTriggerId;
+        const auto position = ci::Vec2i(posX, posY);
+        event = [position, newTriggerId](ci::app::App *app, Level &level)
+        {
+            ev::setTrigger(level.board, position, newTriggerId);
+        };
+    }
+    else if(eventName == "setGround")
+    {
+        int posX, posY, tileId;
+        stream >> posX >> posY >> tileId;
+        const auto position = ci::Vec2i(posX, posY);
+        event = [position, tileId](ci::app::App *app, Level &level)
+        {
+            ev::setGround(level.board, position, std::abs(tileId), tileId<0);
+        };
+    }
+    else if(eventName == "setPlayerTiles")
+    {
+        int tileStill, tileUp, tileRight, tileDown, tileLeft;
+        stream >> tileStill >> tileUp >> tileRight >> tileDown >> tileLeft;
+        ci::Vec4i movingTiles(tileUp, tileRight, tileDown, tileLeft);
+        event = [tileStill, movingTiles](ci::app::App *app, Level &level)
+        {
+            ev::setPlayerTiles(level.player, tileStill, movingTiles);
+        };
+    }
+    else if(eventName == "loadLevel")
+    {
+        std::string levelName;
+        stream >> levelName;
+        event = [levelName](ci::app::App *app, Level &level)
+        {
+            level.destroy(app);
+            try {
+                level = std::move(ev::loadLevel(app, levelName));
+                level.prepare(app);
+            }
+            catch (BadFormatException & e) {
+                level.prepare(app);
+            }
+        };
+    }
+    mgr.setEvent(triggerId, event);
 }
 
 Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
@@ -145,10 +206,16 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
         throw BadFormatException();
     }
     EventManager eventManager;
+    while(!stream.eof())
+    {
+        std::getline(stream, line);
+        std::istringstream s(line);
+        loadEvent(eventManager, s);
+    }
 
-    Level result = { std::move(terrain),
-                     std::move(actor),
-                     std::move(drawer),
-                     std::move(eventManager) };
+    Level result(std::move(terrain),
+                 std::move(actor),
+                 std::move(drawer),
+                 std::move(eventManager));
     return result;
 }

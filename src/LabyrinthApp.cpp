@@ -11,16 +11,13 @@
 #include "cinder/Timeline.h"
 
 
-typedef std::unique_ptr<IWidget> IWidgetPtr;
-
-
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
 
 Direction gActorDirection = DIR_NONE;
-Level * gLevel;
+LevelPtr gLevel;
 
 class LabyrinthApp : public AppNative
 {
@@ -30,9 +27,6 @@ public:
 	void keyUp(KeyEvent event);
 	void update();
 	void draw();
-
-private:
-    std::deque<IWidgetPtr> mWidgets;
 };
 
 
@@ -42,13 +36,13 @@ void LabyrinthApp::setup()
     gl::disableDepthRead();
     gl::disable(GL_MULTISAMPLE);
 
-    gLevel = new Level(loadFrom(this, loadAsset("terrain.ter")));
+    gLevel = LevelPtr(new Level(loadFrom(this, loadAsset("terrain.ter"))));
     gLevel->prepare(this);
 }
 
 void LabyrinthApp::keyDown(KeyEvent event)
 {
-    if(std::any_of(mWidgets.begin(), mWidgets.end(),
+    if(std::any_of(gLevel->widgets.begin(), gLevel->widgets.end(),
                    [&event] (IWidgetPtr &w) { return w->keyDown(event); }))
     {
         return;
@@ -74,7 +68,7 @@ void LabyrinthApp::keyDown(KeyEvent event)
 
 void LabyrinthApp::keyUp(KeyEvent event)
 {
-    if(std::any_of(mWidgets.begin(), mWidgets.end(),
+    if(std::any_of(gLevel->widgets.begin(), gLevel->widgets.end(),
                    [&event] (IWidgetPtr &w) { return w->keyDown(event); }))
     {
         return;
@@ -85,15 +79,15 @@ void LabyrinthApp::keyUp(KeyEvent event)
 
 void LabyrinthApp::update()
 {
-    auto newEnd = std::remove_if(mWidgets.begin(), mWidgets.end(),
+    auto newEnd = std::remove_if(gLevel->widgets.begin(), gLevel->widgets.end(),
                                  [] (IWidgetPtr &w)
                                  {
                                      return w->update() == IWidget::REMOVE;
                                  });
-    mWidgets.erase(newEnd, mWidgets.end());
+    gLevel->widgets.erase(newEnd, gLevel->widgets.end());
 
     const ci::Vec2i actorPos = gLevel->player.logicalPosition();
-    unsigned char available = gLevel->terrain.availableMoves(actorPos.x, actorPos.y);
+    unsigned char available = gLevel->board.availableMoves(actorPos.x, actorPos.y);
     Direction direction = (gActorDirection & available) ? gActorDirection : DIR_NONE;
     gLevel->player.setNextMove(direction);
 }
@@ -102,12 +96,12 @@ void LabyrinthApp::draw()
 {
 	gl::clear( Color( 0, 0, 0 ) );
 
-    std::for_each(mWidgets.begin(), mWidgets.end(),
+    std::for_each(gLevel->widgets.begin(), gLevel->widgets.end(),
                   [this] (IWidgetPtr &w) { w->beforeDraw(getWindowSize()); });
 
-    gLevel->drawer.draw(gLevel->terrain, gLevel->player);
+    gLevel->drawer.draw(gLevel->board, gLevel->player);
 
-    std::for_each(mWidgets.begin(), mWidgets.end(),
+    std::for_each(gLevel->widgets.begin(), gLevel->widgets.end(),
                   [this] (IWidgetPtr &w) { w->afterDraw(getWindowSize()); });
 }
 

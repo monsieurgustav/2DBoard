@@ -21,7 +21,7 @@ Board::Board(int width, int height)
 
 Board::Cell::Cell()
 : mGround(0),
-  mTrigger(0)
+  mTrigger(-1)
 { }
 
 int Board::Cell::groundId() const

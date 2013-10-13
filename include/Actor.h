@@ -25,7 +25,7 @@ class Actor
 {
 public:
     Actor(ci::Timeline & timeline)
-    : mTimeline(timeline),
+    : mTimeline(&timeline),
       mNextMove(DIR_NONE),
       mTileId(0)
     {
@@ -89,7 +89,7 @@ private:
     void move(Direction d);
 
 private:
-    ci::Timeline & mTimeline;
+    ci::Timeline * mTimeline;
     ci::Anim<ci::Vec2f> mAnimatedPosition;
 
     ci::Vec2i mPosition;

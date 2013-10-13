@@ -9,16 +9,16 @@
 #include "EventManager.h"
 
 
-bool EventManager::setEvent(int trigger, const std::function<void()> & event)
+bool EventManager::setEvent(int trigger, const Event & event)
 {
     return !mBindings.insert(std::make_pair(trigger, event)).second;
 }
 
-void EventManager::runEvent(int trigger) const
+void EventManager::runEvent(int trigger, ci::app::App * app, Level & level) const
 {
     auto it = mBindings.find(trigger);
     if(it != mBindings.end())
     {
-        it->second();
+        it->second(app, level);
     }
 }
