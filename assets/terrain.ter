@@ -1,6 +1,22 @@
-5 5
+[ground]
+5 5 32
 -2 -2 1 1 1
 -2 1 1 1 -2
 1 1 -2 -2 1
 1:1 1:2 1 1 -2
 1 1 1 -2 -2
+[player]
+3 3
+3 4 5 6 7
+[tiles]
+1 ground.png 32 12
+2 ground.png 32 10
+3 actor.png 48 1
+4 actor.png 48 12 16
+5 actor.png 48 4 8
+6 actor.png 48 0 4
+7 actor.png 48 8 12
+[triggers]
+1 draw intro.png
+2 changeLevel level2.lvl
+3 setTrigger 4 2 2
