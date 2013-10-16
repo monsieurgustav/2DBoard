@@ -22,16 +22,16 @@ class Drawer
 {
 public:
 
-    Drawer(ci::Timeline & timeline, int tileSize)
-     : mTimeline(&timeline), mTileSize(tileSize),
-       mWindowWidth(0), mWindowHeight(0)
-    { }
+    Drawer(ci::Timeline & timeline, int viewSize, int tileSize)
+     : mTimeline(&timeline), mViewSize(viewSize), mTileSize(tileSize)
+    {
+        assert(viewSize > 2);
+    }
 
     /// Adjust the display to the new window size.
-    void setWindowSize(int width, int height)
+    void setWindowSize(ci::Vec2i size)
     {
-        mWindowWidth = width;
-        mWindowHeight = height;
+        mWindowSize = size;
     }
 
     /// Bind a tile to a tile id from terrain/actor
@@ -46,6 +46,11 @@ public:
     
     void draw(const Board & terrain, const Actor & actor) const;
 
+    bool scrolling() const
+    {
+        return !mCurrentView.isComplete();
+    }
+    
 private:
     struct Tile;
     void drawTile(const Tile & tile, ci::Vec2f position,
@@ -53,8 +58,10 @@ private:
 
 private:
     ci::Timeline * mTimeline;
+    int mViewSize;
     int mTileSize;
-    int mWindowWidth, mWindowHeight;
+    mutable ci::Anim<ci::Vec2f> mCurrentView;
+    ci::Vec2i mWindowSize;
 
     struct Tile
     {

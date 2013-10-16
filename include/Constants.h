@@ -19,8 +19,16 @@ enum Direction
     DIR_MAX
 };
 
+/// Return the reverse direction.
+static Direction reverse(Direction v)
+{
+    int r = ((v & (DIR_UP|DIR_LEFT)) << 1) | ((v & (DIR_DOWN|DIR_RIGHT)) >> 1);
+    return static_cast<Direction>(r);
+}
+
 
 /// How long to move to one tile.
 const float MOVE_DURATION = .5f;
+const float SCROLL_DURATION = .4f;
 
 #endif

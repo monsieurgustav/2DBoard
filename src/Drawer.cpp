@@ -10,6 +10,7 @@
 
 #include "Board.h"
 #include "Actor.h"
+#include "Helpers.h"
 
 #include "cinder/Timeline.h"
 
@@ -44,16 +45,41 @@ namespace
 void Drawer::draw(const Board &terrain, const Actor &actor) const
 {
     // integer scale to preserve pixels
-    const int scalei = std::min(mWindowWidth/mTileSize/terrain.width(),
-                                mWindowHeight/mTileSize/terrain.height());
+    const int scalei = reduce_min(mWindowSize/mTileSize/mViewSize);
     if(!scalei)
     {
         return;
     }
     const float scale(scalei);
 
-    const ci::Vec2f offset((mWindowWidth-terrain.width()*mTileSize*scale)*0.5f,
-                           (mWindowHeight-terrain.height()*mTileSize*scale)*0.5f);
+    // actual view size (depending on window ratio)
+    ci::Vec2i viewSize(mViewSize, mViewSize);
+    if(mWindowSize.x>mWindowSize.y)
+    {
+        viewSize.x = (viewSize.x * mWindowSize.x)/mWindowSize.y;
+    }
+    else
+    {
+        viewSize.y = (viewSize.y * mWindowSize.y)/mWindowSize.x;
+    }
+
+    // select a view (scroll)
+    const auto viewPos = (actor.logicalPosition()-ci::Vec2i(1, 1))
+                            /(viewSize-ci::Vec2i(2, 2));
+    if(mCurrentView.isComplete()
+       && (ci::Vec2f(viewPos)-mCurrentView).lengthSquared() > ci::EPSILON)
+    {
+        const auto lastViewPos = (actor.lastPosition()-ci::Vec2i(1, 1))
+                                    /(viewSize-ci::Vec2i(2, 2));
+        mTimeline->apply(&mCurrentView,
+                         ci::Vec2f(lastViewPos), ci::Vec2f(viewPos),
+                         SCROLL_DURATION);
+    }
+
+
+    ci::Vec2f offset((mWindowSize-viewSize*mTileSize*scale)*0.5f);
+    offset -= mCurrentView.value() * ci::Vec2f(viewSize-ci::Vec2i(2, 2))
+                                   * mTileSize * scale;
 
     const int actorY = std::ceil(actor.animatedPosition().y);
     for(int y=0; y<=actorY; ++y)

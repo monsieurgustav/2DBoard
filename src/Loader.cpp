@@ -107,8 +107,8 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
         throw BadFormatException();
     }
 
-    int width, height, tileSize;
-    stream >> width >> height >> tileSize;
+    int width, height, viewSize, tileSize;
+    stream >> width >> height >> viewSize >> tileSize;
     if(stream.fail() || width < 1 || height < 1)
     {
         throw BadFormatException();
@@ -171,7 +171,7 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
     actor.setTileId(tileLeft, DIR_LEFT);
 
     // tiles
-    Drawer drawer(app->timeline(), tileSize);
+    Drawer drawer(app->timeline(), viewSize, tileSize);
     std::getline(stream, section, '[');
     std::getline(stream, section);
     if(section.compare(0, 6, "tiles]") != 0)

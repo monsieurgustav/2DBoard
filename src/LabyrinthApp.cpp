@@ -93,10 +93,18 @@ void LabyrinthApp::update()
                                  });
     gLevel->widgets.erase(newEnd, gLevel->widgets.end());
 
-    const ci::Vec2i actorPos = gLevel->player.logicalPosition();
-    unsigned char available = gLevel->board.availableMoves(actorPos.x, actorPos.y);
-    Direction direction = (gActorDirection & available) ? gActorDirection : DIR_NONE;
-    gLevel->player.setNextMove(direction);
+    if(!gLevel->drawer.scrolling())
+    {
+        const ci::Vec2i actorPos = gLevel->player.logicalPosition();
+        unsigned char available = gLevel->board.availableMoves(actorPos.x,
+                                                               actorPos.y);
+        Direction direction = (gActorDirection & available) ? gActorDirection : DIR_NONE;
+        gLevel->player.setNextMove(direction);
+    }
+    else
+    {
+        gLevel->player.setNextMove(DIR_NONE);
+    }
 }
 
 void LabyrinthApp::draw()

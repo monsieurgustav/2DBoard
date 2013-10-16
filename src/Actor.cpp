@@ -22,6 +22,29 @@ namespace
     }
 }
 
+ci::Vec2i Actor::lastPosition() const
+{
+    return toDirection(logicalPosition(), reverse(currentMove()));
+}
+
+Direction Actor::currentMove() const
+{
+    // animated postion goes to logical position.
+    ci::Vec2f diff = ci::Vec2f(logicalPosition())-animatedPosition();
+    if(diff.lengthSquared() < ci::EPSILON)
+    {
+        return DIR_NONE;
+    }
+    if(std::abs(diff.x) < ci::EPSILON)
+    {
+        return diff.y > 0 ? DIR_DOWN : DIR_UP;
+    }
+    else
+    {
+        return diff.x > 0 ? DIR_RIGHT : DIR_LEFT;
+    }
+}
+
 void Actor::setNextMove(Direction d)
 {
     mNextMove = d;

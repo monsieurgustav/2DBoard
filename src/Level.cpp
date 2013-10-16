@@ -41,7 +41,7 @@ void Level::prepare(ci::app::App * app)
             eventManager.runEvent(trigger, app, *this);
         });
 
-    drawer.setWindowSize(app->getWindowWidth(), app->getWindowHeight());
+    drawer.setWindowSize(app->getWindowSize());
     
     // run the initial event.
     eventManager.runEvent(0, app, *this);

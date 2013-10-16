@@ -60,10 +60,16 @@ public:
         return mPosition;
     }
 
+    /// The start position of the current movement.
+    ci::Vec2i lastPosition() const;
+
     void setStartPosition(ci::Vec2i position)
     {
         mAnimatedPosition = mPosition = position;
     }
+
+    /// DIR_NONE if not moving, else the movement direction.
+    Direction currentMove() const;
 
     /*
      * If the actor is still, move immediately in the given direction.
