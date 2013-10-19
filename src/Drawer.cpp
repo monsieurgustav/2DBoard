@@ -50,7 +50,7 @@ void Drawer::draw(const Board &terrain, const Actor &actor) const
     {
         return;
     }
-    const float scale(scalei);
+    const float scale = static_cast<float>(scalei);
 
     // actual view size (depending on window ratio)
     ci::Vec2i viewSize(mViewSize, mViewSize);

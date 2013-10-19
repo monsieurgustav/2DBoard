@@ -12,6 +12,8 @@ solution "LabyrinthBoard"
     kind "WindowedApp"
     language "C++"
     files {"include/*.h", "src/*.cpp"}
+    pchheader "include/Labyrinth_Prefix.h"
+    pchsource "src/Labyrinth_Prefix.cpp"
     includedirs {"include",
                  "cinder/include",
                  "cinder/boost"}
@@ -19,6 +21,7 @@ solution "LabyrinthBoard"
     libdirs {"cinder/lib"}
     configuration "windows"
       libdirs {"cinder/lib/msw"}
+      buildoptions {"-Zm150", "-FILabyrinth_Prefix.h"}
     configuration "macos"
       libdirs {"cinder/lib/macos"}
     

@@ -17,7 +17,7 @@
 
 class IWidget;
 class Board;
-class Level;
+struct Level;
 class Actor;
 
 namespace cinder {

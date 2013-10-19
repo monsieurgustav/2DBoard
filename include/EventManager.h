@@ -13,13 +13,7 @@
 #include <unordered_map>
 #include <functional>
 
-class Level;
-namespace cinder {
-    namespace app {
-        class App;
-    }
-}
-namespace ci = cinder;
+struct Level;
 
 
 class EventManager

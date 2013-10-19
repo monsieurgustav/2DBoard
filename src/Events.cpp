@@ -57,9 +57,9 @@ namespace
         {
             const int ratio = reduce_min(windowSize/texture->getSize());
             auto dst = texture->getBounds();
-            dst.expand((ratio-1)*texture->getWidth()*.5f,
-                       (ratio-1)*texture->getHeight()*.5f);
-            dst.moveULTo((windowSize-dst.getSize())*0.5f);
+            dst.expand((ratio-1)*texture->getWidth()/2,
+                       (ratio-1)*texture->getHeight()/2);
+            dst.moveULTo((windowSize-dst.getSize())/2);
             ci::gl::draw(texture, dst);
         }
     };
@@ -197,10 +197,9 @@ namespace
         void trackWidgetFrom(size_t index)
         {
             assert(index < level.pendingWidgets.size());
-            for(auto i=index, n=level.pendingWidgets.size(); i != n; ++i)
-            {
-                activeWidgets.push_back(level.pendingWidgets[i]);
-            }
+            activeWidgets.insert(activeWidgets.end(),
+                                 level.pendingWidgets.begin()+index,
+                                 level.pendingWidgets.end());
         }
     };
 }
