@@ -16,9 +16,9 @@
 
 
 void Drawer::setTile(int tileId, ci::gl::TextureRef image, int height,
-                     int begin, int end)
+                     int line, int begin, int end)
 {
-    Tile tmp = {image, height, begin, end, begin};
+    Tile tmp = {image, height, line, begin, end, begin};
     Tile & tile = mIdToTile[tileId] = tmp;
     // vs2010 does not support generalized initializer.
     // Tile & tile = mIdToTile[tileId] = {image, height, begin, end, begin};
@@ -32,13 +32,12 @@ namespace
 {
     ci::Area pickTileIndex(const ci::Area & imageSize,
                            int tileWidth, int tileHeight,
-                           int tileIndex)
+                           int tileLine, int tileIndex)
     {
         const int tileCountInRow = imageSize.getWidth() / tileWidth;
-        const int x = tileIndex % tileCountInRow;
-        const int y = tileIndex / tileCountInRow;
-        return ci::Area(x*tileWidth, y*tileHeight,
-                        (x+1)*tileWidth, (y+1)*tileHeight);
+        tileIndex %= tileCountInRow;
+        return ci::Area(tileIndex*tileWidth, (tileLine+1)*tileWidth-tileHeight,
+                        (tileIndex+1)*tileWidth, (tileLine+1)*tileWidth);
     }
 }
 
@@ -110,7 +109,7 @@ void Drawer::drawTile(const Drawer::Tile &tile, ci::Vec2f position,
 {
     const auto imageSize = tile.image->getBounds();
     const auto src = pickTileIndex(imageSize, mTileSize, tile.height,
-                                   tile.current);
+                                   tile.line, tile.current);
     auto dst = ci::Rectf(position+ci::Vec2f(0.f, 1.f-static_cast<float>(tile.height)/mTileSize), position+ci::Vec2f(1.f, 1.f));
     dst.scale(mTileSize*scale);
     dst.offset(offset);

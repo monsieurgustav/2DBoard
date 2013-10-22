@@ -32,7 +32,8 @@ public:
 
 void LabyrinthApp::setup()
 {
-    gl::enableAlphaTest();
+    gl::enableAlphaBlending();
+    gl::enableAlphaTest(0.1f);
     gl::disableDepthRead();
     gl::disable(GL_MULTISAMPLE);
 

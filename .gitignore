@@ -14,3 +14,10 @@
 
 # MacOS
 .DS_Store
+
+# Win32
+*.exe
+*.dll
+*.lib
+*.ilk
+*.pdb

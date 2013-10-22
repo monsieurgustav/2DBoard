@@ -35,14 +35,14 @@ public:
     }
 
     /// Bind a tile to a tile id from terrain/actor
-    void setTile(int tileId, ci::gl::TextureRef image, int height, int index)
+    void setTile(int tileId, ci::gl::TextureRef image, int height, int line, int index)
     {
-        setTile(tileId, image, height, index, index+1);
+        setTile(tileId, image, height, line, index, index+1);
     }
 
     /// Bind a animated tile to a terrain id.
     void setTile(int tileId, ci::gl::TextureRef image, int height,
-                 int begin, int end);
+                 int line, int begin, int end);
     
     void draw(const Board & terrain, const Actor & actor) const;
 
@@ -67,7 +67,7 @@ private:
     {
         ci::gl::TextureRef image;
         int height;
-        int begin, end;
+        int line, begin, end;
         ci::Anim<int> current;
     };
     std::unordered_map<int, Tile> mIdToTile;

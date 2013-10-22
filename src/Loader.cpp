@@ -178,13 +178,13 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
     {
         throw BadFormatException();
     }
-    int tileId, tileHeight, beginIndex, endIndex;
+    int tileId, tileHeight, tileLine, beginIndex, endIndex;
     std::string imageName;
     while(stream.peek() != '[')
     {
         std::getline(stream, line);
         std::istringstream s(line);
-        s >> tileId >> imageName >> tileHeight >> beginIndex;
+        s >> tileId >> imageName >> tileHeight >> tileLine >> beginIndex;
         if(s.fail())
         {
             throw BadFormatException();
@@ -193,11 +193,11 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
         s >> endIndex;
         if(s.fail())
         {
-            drawer.setTile(tileId, tex, tileHeight, beginIndex);
+            drawer.setTile(tileId, tex, tileHeight, tileLine, beginIndex);
         }
         else
         {
-            drawer.setTile(tileId, tex, tileHeight, beginIndex, endIndex);
+            drawer.setTile(tileId, tex, tileHeight, tileLine, beginIndex, endIndex);
         }
     }
 
