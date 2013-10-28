@@ -14,6 +14,8 @@
 
 #include "cinder/Timeline.h"
 #include "cinder/gl/Texture.h"
+#include "cinder/audio/Output.h"
+#include "cinder/audio/SourceFile.h"
 
 
 void ev::setTrigger(Board & board, ci::Vec2i position, int triggerId)
@@ -116,6 +118,35 @@ void ev::displayImage(ci::app::App * app, Level & level,
     ci::gl::TextureRef tex = loadTexture(app, filename);
     IWidget * w = new TimerTextureWidget(app->timeline(), tex, duration);
     level.pendingWidgets.push_back(IWidgetPtr(w));
+}
+
+
+void ev::playSound(ci::app::App * app, Level & level, const std::string &filename)
+{
+    auto source = ci::audio::SourceFile::createRef(app->loadAsset(filename));
+    auto track = ci::audio::Output::addTrack(source);
+    
+    auto found = level.sounds.find(filename);
+    if(found != level.sounds.end())
+    {
+        found->second->stop();
+        found->second = track;
+    }
+    else
+    {
+        level.sounds[filename] = track;
+    }
+}
+
+
+void ev::stopSound(Level & level, const std::string & filename)
+{
+    auto found = level.sounds.find(filename);
+    if(found != level.sounds.end())
+    {
+        found->second->stop();
+        level.sounds.erase(found);
+    }
 }
 
 

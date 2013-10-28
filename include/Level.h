@@ -23,6 +23,10 @@ namespace cinder {
     namespace app {
         class App;
     }
+    namespace audio {
+        class Track;
+        typedef std::shared_ptr<Track> TrackRef;
+    }
 }
 namespace ci = cinder;
 
@@ -37,11 +41,15 @@ struct Level
     EventManager eventManager;
     std::deque<IWidgetPtr> widgets;
     std::deque<IWidgetPtr> pendingWidgets;
+    std::unordered_map<std::string, ci::audio::TrackRef> sounds;
 
     Level(Board &&board, Actor &&player, Drawer &&drawer, EventManager &&mgr);
 
     /// explicit move constructor (as vs won't create it)
     Level(Level && other);
+
+    /// stop playing sounds
+    ~Level();
 
     /// explicit move constructor (as vs won't create it)
     Level & operator=(Level && other);

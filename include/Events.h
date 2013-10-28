@@ -41,6 +41,10 @@ namespace ev
     void displayImage(ci::app::App * app, Level & level,
                       const std::string & filename, float duration);
 
+    void playSound(ci::app::App * app, Level & level, const std::string & filename);
+
+    void stopSound(Level & level, const std::string & filename);
+
     // utilities
     void wait(ci::app::App * app, Level & level, float duration);
 

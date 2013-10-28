@@ -84,6 +84,24 @@ static EventManager::Event loadEvent(std::istream & stream)
             level.prepare(app);
         };
     }
+    else if(eventName == "playSound")
+    {
+        std::string filename;
+        stream >> filename;
+        return [filename](ci::app::App * app, Level & level)
+        {
+            ev::playSound(app, level, filename);
+        };
+    }
+    else if(eventName == "stopSound")
+    {
+        std::string filename;
+        stream >> filename;
+        return [filename](ci::app::App *, Level & level)
+        {
+            ev::stopSound(level, filename);
+        };
+    }
     else if(eventName == "wait")
     {
         float duration;

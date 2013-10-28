@@ -9,6 +9,7 @@
 #include "Level.h"
 
 #include "cinder/app/App.h"
+#include "cinder/audio/Output.h"
 
 
 Level::Level(Board && b, Actor && p, Drawer && d, EventManager && m)
@@ -22,6 +23,13 @@ Level::Level(Level && other)
   eventManager(std::move(other.eventManager)),
   widgets(std::move(other.widgets))
 { }
+
+Level::~Level()
+{
+    std::for_each(sounds.begin(), sounds.end(),
+                  [] (decltype(*sounds.begin()) & v)
+                  { v.second->stop(); });
+}
 
 Level & Level::operator=(Level && other)
 {
