@@ -86,27 +86,32 @@ void Drawer::draw(const Board &terrain, const Actor &actor) const
         auto it=terrain.beginRow(y), end=terrain.endRow(y);
         for(int x=0; it != end; ++it, ++x)
         {
-            drawTile(mIdToTile.at(it->groundId()), ci::Vec2f(x, y),
-                     offset, scale);
+            drawTile(it->groundId(), ci::Vec2f(x, y), offset, scale);
         }
     }
-    drawTile(mIdToTile.at(actor.tileId()), actor.animatedPosition(),
-             offset, scale);
 
+    drawTile(actor.tileId(), actor.animatedPosition(), offset, scale);
+    
     for(int y=actorY+1; y<terrain.height(); ++y)
     {
         auto it=terrain.beginRow(y), end=terrain.endRow(y);
         for(int x=0; it != end; ++it, ++x)
         {
-            drawTile(mIdToTile.at(it->groundId()), ci::Vec2f(x, y),
-                     offset, scale);
+            drawTile(it->groundId(), ci::Vec2f(x, y), offset, scale);
         }
     }
 }
 
-void Drawer::drawTile(const Drawer::Tile &tile, ci::Vec2f position,
+void Drawer::drawTile(int tileId, ci::Vec2f position,
                       ci::Vec2f offset, float scale) const
 {
+    const auto found = mIdToTile.find(tileId);
+    if(found == mIdToTile.end())
+    {
+        return;
+    }
+
+    const Tile & tile = found->second;
     const auto imageSize = tile.image->getBounds();
     const auto src = pickTileIndex(imageSize, mTileSize, tile.height,
                                    tile.line, tile.current);

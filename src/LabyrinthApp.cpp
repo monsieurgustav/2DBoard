@@ -10,6 +10,7 @@
 #include "cinder/Tween.h"
 #include "cinder/Timeline.h"
 
+#include "FileWatcher/FileWatcher.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -18,6 +19,7 @@ using namespace std;
 
 Direction gActorDirection = DIR_NONE;
 LevelPtr gLevel;
+FW::FileWatcher gWatcher;
 
 class LabyrinthApp : public AppNative
 {
@@ -29,6 +31,36 @@ public:
 	void draw();
 };
 
+namespace {
+    class LevelWatch : public FW::FileWatchListener
+    {
+        ci::app::App *mApp;
+    public:
+        LevelWatch(ci::app::App * app) : mApp(app)
+        {}
+
+        virtual void handleFileAction(FW::WatchID watchid,
+                                      const FW::String& dir,
+                                      const FW::String& filename,
+                                      FW::Action action) override
+        {
+            if(gLevel->source->getFilePath().filename() == filename)
+            {
+                const auto playerPos = gLevel->player.logicalPosition();
+
+                gLevel->destroy(mApp);
+                try {
+                    *gLevel = std::move(loadFrom(mApp, loadAsset(filename)));
+                    gLevel->player.setStartPosition(playerPos);
+                }
+                catch(BadFormatException &) {
+                    // do nothing
+                }
+                gLevel->prepare(mApp);
+            }
+        }
+    };
+}
 
 void LabyrinthApp::setup()
 {
@@ -37,8 +69,14 @@ void LabyrinthApp::setup()
     gl::disableDepthRead();
     gl::disable(GL_MULTISAMPLE);
 
-    gLevel = LevelPtr(new Level(loadFrom(this, loadAsset("terrain.ter"))));
+    const auto startLevel = loadAsset("start.lvl");
+
+    gLevel = LevelPtr(new Level(loadFrom(this, startLevel)));
+    gLevel->source = startLevel;
     gLevel->prepare(this);
+
+    const auto assetPath = startLevel->getFilePath().parent_path();
+    gWatcher.addWatch(assetPath.string(), new LevelWatch(this));
 }
 
 void LabyrinthApp::keyDown(KeyEvent event)
@@ -80,6 +118,9 @@ void LabyrinthApp::keyUp(KeyEvent event)
 
 void LabyrinthApp::update()
 {
+    // check file update
+    gWatcher.update();
+
     // include pending widgets
     gLevel->widgets.insert(gLevel->widgets.end(),
                            gLevel->pendingWidgets.begin(),

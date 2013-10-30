@@ -11,18 +11,22 @@ solution "LabyrinthBoard"
   project "Labyrinth"
     kind "WindowedApp"
     language "C++"
-    files {"include/*.h", "src/*.cpp"}
+    files {"include/*.h", "src/*.cpp",
+           "simplefilewatcher/includes/*", "simplefilewatcher/source/FileWatcher.cpp"}
     pchheader "include/Labyrinth_Prefix.h"
     pchsource "src/Labyrinth_Prefix.cpp"
     includedirs {"include",
                  "cinder/include",
-                 "cinder/boost"}
+                 "cinder/boost",
+                 "simplefilewatcher/includes"}
     
     libdirs {"cinder/lib"}
     configuration "windows"
+      files "simplefilewatcher/source/FileWatcherWin32.cpp"
       libdirs {"cinder/lib/msw"}
       buildoptions {"-Zm150", "-FILabyrinth_Prefix.h"}
     configuration "macos"
+      files "simplefilewatcher/source/FileWatcherOSX.cpp"
       libdirs {"cinder/lib/macos"}
     
     configuration "Debug"

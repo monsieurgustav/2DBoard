@@ -52,8 +52,7 @@ public:
     }
     
 private:
-    struct Tile;
-    void drawTile(const Tile & tile, ci::Vec2f position,
+    void drawTile(int tileId, ci::Vec2f position,
                   ci::Vec2f offset, float scale) const;
 
 private:

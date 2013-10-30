@@ -6,6 +6,8 @@
 #include "cinder/ImageIo.h"
 #include "cinder/app/App.h"
 
+#include "FileWatcher/FileWatcher.h"
+
 #include <fstream>
 #include <sstream>
 #include <cassert>
@@ -74,11 +76,12 @@ static EventManager::Event loadEvent(std::istream & stream)
             level.destroy(app);
             try {
                 level = std::move(ev::loadLevel(app, levelName));
-                level.prepare(app);
+                level.source = app->loadAsset(levelName);
             }
-            catch (BadFormatException & e) {
-                level.prepare(app);
+            catch (BadFormatException &) {
+                // do nothing
             }
+            level.prepare(app);
         };
     }
     else if(eventName == "wait")

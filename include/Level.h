@@ -26,8 +26,11 @@ namespace cinder {
 }
 namespace ci = cinder;
 
+
 struct Level
 {
+    ci::DataSourceRef source;
+
     Board board;
     Actor player;
     Drawer drawer;
