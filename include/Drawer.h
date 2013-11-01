@@ -48,7 +48,7 @@ public:
 
     bool scrolling() const
     {
-        return !mCurrentView.isComplete();
+        return !mScrollOffset.isComplete();
     }
     
 private:
@@ -59,7 +59,7 @@ private:
     ci::Timeline * mTimeline;
     int mViewSize;
     int mTileSize;
-    mutable ci::Anim<ci::Vec2f> mCurrentView;
+    mutable ci::Anim<ci::Vec2f> mScrollOffset;
     ci::Vec2i mWindowSize;
 
     struct Tile

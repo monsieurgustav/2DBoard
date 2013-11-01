@@ -28,17 +28,33 @@ void Drawer::setTile(int tileId, ci::gl::TextureRef image, int height,
     }
 }
 
-namespace
+static ci::Area pickTileIndex(const ci::Area & imageSize,
+                              int tileWidth, int tileHeight,
+                              int tileLine, int tileIndex)
 {
-    ci::Area pickTileIndex(const ci::Area & imageSize,
-                           int tileWidth, int tileHeight,
-                           int tileLine, int tileIndex)
-    {
-        const int tileCountInRow = imageSize.getWidth() / tileWidth;
-        tileIndex %= tileCountInRow;
-        return ci::Area(tileIndex*tileWidth, (tileLine+1)*tileWidth-tileHeight,
-                        (tileIndex+1)*tileWidth, (tileLine+1)*tileWidth);
-    }
+    const int tileCountInRow = imageSize.getWidth() / tileWidth;
+    tileIndex %= tileCountInRow;
+    return ci::Area(tileIndex*tileWidth, (tileLine+1)*tileWidth-tileHeight,
+                    (tileIndex+1)*tileWidth, (tileLine+1)*tileWidth);
+}
+
+/**
+ * @brief Compute the tile offset based on the player position
+ *
+ * The given offset takes the board size into account in order to not step
+ * out of it.
+ */
+static ci::Vec2i positionToScrollOffset(ci::Vec2i position,
+                                        ci::Vec2i viewSize,
+                                        ci::Vec2i boardSize)
+{
+    boardSize -= viewSize;
+    position -= ci::Vec2i(1, 1);
+    viewSize -= ci::Vec2i(2, 2);
+    //return position - position % viewSize;
+    return min(boardSize,
+               position - ci::Vec2i(position.x % viewSize.x,
+                                    position.y % viewSize.y));
 }
 
 void Drawer::draw(const Board &terrain, const Actor &actor) const
@@ -63,22 +79,21 @@ void Drawer::draw(const Board &terrain, const Actor &actor) const
     }
 
     // select a view (scroll)
-    const auto viewPos = (actor.logicalPosition()-ci::Vec2i(1, 1))
-                            /(viewSize-ci::Vec2i(2, 2));
-    if(mCurrentView.isComplete()
-       && (ci::Vec2f(viewPos)-mCurrentView).lengthSquared() > ci::EPSILON)
+    const auto scrollOffset = positionToScrollOffset(actor.logicalPosition(),
+                                                     viewSize, terrain.size());
+    if(mScrollOffset.isComplete()
+       && (ci::Vec2f(scrollOffset)-mScrollOffset).lengthSquared() > ci::EPSILON)
     {
-        const auto lastViewPos = (actor.lastPosition()-ci::Vec2i(1, 1))
-                                    /(viewSize-ci::Vec2i(2, 2));
-        mTimeline->apply(&mCurrentView,
-                         ci::Vec2f(lastViewPos), ci::Vec2f(viewPos),
-                         SCROLL_DURATION);
+        const auto lastScrollOffset = positionToScrollOffset(actor.lastPosition(),
+                                                     viewSize, terrain.size());
+        mTimeline->apply(&mScrollOffset,
+                         ci::Vec2f(lastScrollOffset), ci::Vec2f(scrollOffset),
+                         reduce_max(abs(scrollOffset-lastScrollOffset)) * SCROLL_DURATION);
     }
 
 
     ci::Vec2f offset((mWindowSize-viewSize*mTileSize*scale)*0.5f);
-    offset -= mCurrentView.value() * ci::Vec2f(viewSize-ci::Vec2i(2, 2))
-                                   * mTileSize * scale;
+    offset -= mScrollOffset.value() * mTileSize * scale;
 
     const int actorY = std::ceil(actor.animatedPosition().y);
     for(int y=0; y<=actorY; ++y)

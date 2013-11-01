@@ -56,6 +56,11 @@ public:
     {
         return mHeight;
     }
+
+    ci::Vec2i size() const
+    {
+        return ci::Vec2i(mWidth, mHeight);
+    }
     
     /*
      *  Accessors + iterators
