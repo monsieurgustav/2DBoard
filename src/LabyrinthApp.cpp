@@ -44,13 +44,17 @@ namespace {
                                       const FW::String& filename,
                                       FW::Action action) override
         {
-            if(gLevel->source->getFilePath().filename() == filename)
+            // filename is:
+            //  - filename.ext on Windows
+            //  - absolutepath/filename.ext on MacOSX
+            const auto file = boost::filesystem::path(filename).filename();
+            if(gLevel->source->getFilePath().filename() == file)
             {
                 const auto playerPos = gLevel->player.logicalPosition();
 
                 gLevel->destroy(mApp);
                 try {
-                    *gLevel = std::move(loadFrom(mApp, loadAsset(filename)));
+                    *gLevel = std::move(loadFrom(mApp, loadAsset(file)));
                     gLevel->player.setStartPosition(playerPos);
                 }
                 catch(BadFormatException &) {

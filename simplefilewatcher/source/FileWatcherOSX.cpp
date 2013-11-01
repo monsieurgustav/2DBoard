@@ -129,7 +129,7 @@ namespace FW
 			target.udata = &tempEntry;
 			KEvent* ke = (KEvent*)bsearch(&target, &mChangeList, mChangeListCount + 1, sizeof(KEvent), comparator);
 			if(!ke)
-				throw FileNotFoundException(directory);
+				throw FileNotFoundException(name);
 
 			tempEntry.mFilename = 0;
 			
@@ -216,7 +216,7 @@ namespace FW
 			closedir(dir);
 		};
 		
-		void handleAction(const String& filename, FileWatcher::Action action)
+		void handleAction(const String& filename, Actions::Action action)
 		{
 			mListener->handleFileAction(mWatchID, mDirName, filename, action);
 		}
@@ -235,7 +235,7 @@ namespace FW
 			// scan directory and call addFile(name, false) on each file
 			DIR* dir = opendir(mDirName.c_str());
 			if(!dir)
-				throw FileNotFoundException(directory);
+				throw FileNotFoundException(mDirName);
 			
 			struct dirent* entry;
 			struct stat attrib;

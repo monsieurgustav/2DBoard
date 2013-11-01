@@ -20,6 +20,8 @@
 		6A7B844E180AB527006759D5 /* Events.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A7B844D180AB527006759D5 /* Events.cpp */; };
 		6A7B8450180ABCD5006759D5 /* Board.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A7B844F180ABCD5006759D5 /* Board.cpp */; };
 		6A9B138C17F36CD700BD1BF9 /* Loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B138B17F36CD700BD1BF9 /* Loader.cpp */; };
+		6AB5ADE51823FD100019295C /* FileWatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6AB5ADE31823FD100019295C /* FileWatcher.cpp */; };
+		6AB5ADE61823FD100019295C /* FileWatcherOSX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6AB5ADE41823FD100019295C /* FileWatcherOSX.cpp */; };
 		6ACED74E17FF7F960068294E /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED74C17FF7F960068294E /* EventManager.cpp */; };
 		6ACED7531800592E0068294E /* Drawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED7521800592E0068294E /* Drawer.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -74,6 +76,8 @@
 		6A9B138B17F36CD700BD1BF9 /* Loader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Loader.cpp; path = ../src/Loader.cpp; sourceTree = "<group>"; };
 		6A9B138D17F371CE00BD1BF9 /* cinder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cinder.xcodeproj; path = ../../cinder_0.8.5_mac/xcode/cinder.xcodeproj; sourceTree = "<group>"; };
 		6A9B139F17F3842200BD1BF9 /* Actor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = ../include/Actor.h; sourceTree = "<group>"; };
+		6AB5ADE31823FD100019295C /* FileWatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileWatcher.cpp; path = ../simplefilewatcher/source/FileWatcher.cpp; sourceTree = "<group>"; };
+		6AB5ADE41823FD100019295C /* FileWatcherOSX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileWatcherOSX.cpp; path = ../simplefilewatcher/source/FileWatcherOSX.cpp; sourceTree = "<group>"; };
 		6ACED74817FF7E2F0068294E /* EventManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventManager.h; path = ../include/EventManager.h; sourceTree = "<group>"; };
 		6ACED74C17FF7F960068294E /* EventManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventManager.cpp; path = ../src/EventManager.cpp; sourceTree = "<group>"; };
 		6ACED750180058FC0068294E /* Drawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Drawer.h; path = ../include/Drawer.h; sourceTree = "<group>"; };
@@ -116,6 +120,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				6AB5ADE31823FD100019295C /* FileWatcher.cpp */,
+				6AB5ADE41823FD100019295C /* FileWatcherOSX.cpp */,
 				6A7B844F180ABCD5006759D5 /* Board.cpp */,
 				6A7B844D180AB527006759D5 /* Events.cpp */,
 				6A9B138B17F36CD700BD1BF9 /* Loader.cpp */,
@@ -322,7 +328,9 @@
 				6A1527AA1809BFE900C6B5C9 /* Level.cpp in Sources */,
 				6A9B138C17F36CD700BD1BF9 /* Loader.cpp in Sources */,
 				6ACED7531800592E0068294E /* Drawer.cpp in Sources */,
+				6AB5ADE61823FD100019295C /* FileWatcherOSX.cpp in Sources */,
 				6A0AC6A017FDEBF5005E1D5C /* Actor.cpp in Sources */,
+				6AB5ADE51823FD100019295C /* FileWatcher.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,7 +394,10 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				HEADER_SEARCH_PATHS = (
+					"\"$(CINDER_PATH)/boost\"",
+					../simplefilewatcher/includes,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -403,7 +414,10 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				HEADER_SEARCH_PATHS = (
+					"\"$(CINDER_PATH)/boost\"",
+					../simplefilewatcher/includes,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
