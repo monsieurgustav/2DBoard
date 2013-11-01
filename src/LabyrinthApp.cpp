@@ -27,6 +27,7 @@ public:
 	void setup();
 	void keyDown(KeyEvent event);
 	void keyUp(KeyEvent event);
+    virtual void resize() override;
 	void update();
 	void draw();
 };
@@ -118,6 +119,11 @@ void LabyrinthApp::keyUp(KeyEvent event)
     }
 
     gActorDirection = DIR_NONE;
+}
+
+void LabyrinthApp::resize()
+{
+    gLevel->drawer.setWindowSize(getWindowSize());
 }
 
 void LabyrinthApp::update()
