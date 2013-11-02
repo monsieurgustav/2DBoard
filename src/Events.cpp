@@ -15,7 +15,6 @@
 #include "cinder/Timeline.h"
 #include "cinder/gl/Texture.h"
 #include "cinder/audio/Output.h"
-#include "cinder/audio/SourceFile.h"
 
 
 void ev::setTrigger(Board & board, ci::Vec2i position, int triggerId)
@@ -123,7 +122,7 @@ void ev::displayImage(ci::app::App * app, Level & level,
 
 void ev::playSound(ci::app::App * app, Level & level, const std::string &filename)
 {
-    auto source = ci::audio::SourceFile::createRef(app->loadAsset(filename));
+    auto source = ci::audio::load(app->loadAsset(filename));
     auto track = ci::audio::Output::addTrack(source);
     
     auto found = level.sounds.find(filename);

@@ -25,6 +25,7 @@ class LabyrinthApp : public AppNative
 {
 public:
 	void setup();
+    void shutdown();
 	void keyDown(KeyEvent event);
 	void keyUp(KeyEvent event);
     virtual void resize() override;
@@ -82,6 +83,11 @@ void LabyrinthApp::setup()
 
     const auto assetPath = startLevel->getFilePath().parent_path();
     gWatcher.addWatch(assetPath.string(), new LevelWatch(this));
+}
+
+void LabyrinthApp::shutdown()
+{
+    gLevel.reset();
 }
 
 void LabyrinthApp::keyDown(KeyEvent event)
