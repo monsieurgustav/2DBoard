@@ -15,11 +15,47 @@
 #include <unordered_map>
 
 
+/// loaded images collection
 std::unordered_map<std::string, ci::gl::TextureRef> gCache;
 
+
+namespace {
+    class TextureWatch : public FW::FileWatchListener
+    {
+        ci::app::App * mApp;
+    public:
+        TextureWatch(ci::app::App * app) : mApp(app)
+        { }
+
+        virtual void handleFileAction(FW::WatchID watchid,
+                                      const FW::String& dir,
+                                      const FW::String& filename,
+                                      FW::Action action) override
+        {
+            if(action != FW::Actions::Modified)
+            {
+                return;
+            }
+
+            // filename is:
+            //  - filename.ext on Windows
+            //  - absolutepath/filename.ext on MacOSX
+            const auto file = boost::filesystem::path(filename).filename().string();
+            auto found = gCache.find(file);
+            if(found != gCache.end())
+            {
+                const auto asset = mApp->loadAsset(file);
+                auto newTexture = ci::Surface(ci::loadImage(asset));
+                found->second->update(newTexture);
+            }
+        }
+    };
+}
+
 ci::gl::TextureRef loadTexture(ci::app::App * app,
-                                 const std::string & imageName)
+                               const std::string & imageName)
 {
+
     auto found = gCache.find(imageName);
     if(found == gCache.end())
     {
@@ -27,9 +63,72 @@ ci::gl::TextureRef loadTexture(ci::app::App * app,
         auto tex = ci::gl::Texture::create(loadImage(asset));
         tex->setMagFilter(GL_NEAREST);
         found = gCache.insert(std::make_pair(imageName, tex)).first;
+
+        // setup watcher
+        static FW::FileWatcher * watcher = NULL;
+        if(!watcher)
+        {
+            watcher = new FW::FileWatcher;
+            const auto assetPath = asset->getFilePath().parent_path();
+            watcher->addWatch(assetPath.string(), new TextureWatch(app));
+        }
     }
     return found->second;
 }
+
+
+static void loadCell(Board::Cell & cell, std::istream & stream)
+{
+    std::string seq;
+    stream >> seq;
+
+    int layerCount = 0;
+    bool hasEvent =  false;
+    std::transform(seq.begin(), seq.end(),
+                   seq.begin(),
+                   [&layerCount, &hasEvent](char c) -> char {
+                     if(c==':') {
+                       hasEvent = true;
+                       c = ' ';
+                     } else if(c==',') {
+                       if(hasEvent)  throw BadFormatException();
+                       ++layerCount;
+                       c = ' ';
+                     }
+                     return c;
+                   });
+
+    int ground = 0;
+    int layer = 0;
+    int trigger = 0;
+    std::istringstream parse(seq);
+
+    parse >> ground;
+    if(layerCount)
+    {
+        parse >> layer;
+    }
+    if(hasEvent)
+    {
+        parse >> trigger;
+    }
+
+    if(stream.fail())
+    {
+        throw BadFormatException();
+    }
+
+    cell.setGroundId(std::abs(ground), ground<0);
+    if(layer>0)
+    {
+        cell.setLayerId(layer);
+    }
+    if(trigger>0)
+    {
+        cell.setTriggerId(trigger);
+    }
+}
+
 
 static EventManager::Event loadEvent(std::istream & stream)
 {
@@ -114,6 +213,13 @@ static EventManager::Event loadEvent(std::istream & stream)
     return EventManager::Event();
 }
 
+
+static bool isComment(const std::string & line)
+{
+    return line.empty() || line[0] == '#';
+}
+
+
 Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
 {
     assert(input->isFilePath());
@@ -140,36 +246,7 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
     // for(auto & cell : terrain)
     for(auto it=terrain.begin(), end=terrain.end(); it != end; ++it)
     {
-        auto & cell = *it;
-
-        int value = 0;
-        int trigger = 0;
-
-        std::string seq;
-        stream >> seq;
-        auto separator = seq.find(':');
-
-        if(separator == std::string::npos)
-        {
-            std::istringstream parse(seq);
-            parse >> value;
-        }
-        else
-        {
-            seq[separator] = ' ';
-            std::istringstream parse(seq);
-            parse >> value >> trigger;
-        }
-        if(stream.fail())
-        {
-            throw BadFormatException();
-        }
-
-        cell.setGroundId(std::abs(value), value<0);
-        if(trigger>0)
-        {
-            cell.setTriggerId(trigger);
-        }
+        loadCell(*it, stream);
     }
 
     // player
@@ -204,6 +281,11 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
     while(stream.peek() != '[')
     {
         std::getline(stream, line);
+        if(isComment(line))
+        {
+            continue;
+        }
+
         std::istringstream s(line);
         s >> tileId >> imageName >> tileHeight >> tileLine >> beginIndex;
         if(s.fail())
@@ -233,6 +315,11 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
     while(!stream.eof())
     {
         std::getline(stream, line);
+        if(isComment(line))
+        {
+            continue;
+        }
+
         std::istringstream s(line);
 
         int triggerId;

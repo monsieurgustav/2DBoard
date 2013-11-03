@@ -31,10 +31,16 @@ public:
         /// id > 0
         void setGroundId(int id, bool blocking);
 
+        int layerId() const;
+        
+        /// id > 0
+        void setLayerId(int id);
+
         bool blocking() const;
 
     private:
         int mGround;
+        int mLayer;
         int mTrigger;
     };
     

@@ -96,12 +96,16 @@ void Drawer::draw(const Board &terrain, const Actor &actor) const
     offset -= mScrollOffset.value() * mTileSize * scale;
 
     const int actorY = std::ceil(actor.animatedPosition().y);
-    for(int y=0; y<=actorY; ++y)
+    for(int y=0; y<=actorY && y<terrain.height(); ++y)
     {
         auto it=terrain.beginRow(y), end=terrain.endRow(y);
         for(int x=0; it != end; ++it, ++x)
         {
             drawTile(it->groundId(), ci::Vec2f(x, y), offset, scale);
+            if(it->layerId())
+            {
+                drawTile(it->layerId(), ci::Vec2f(x, y), offset, scale);
+            }
         }
     }
 
@@ -113,6 +117,10 @@ void Drawer::draw(const Board &terrain, const Actor &actor) const
         for(int x=0; it != end; ++it, ++x)
         {
             drawTile(it->groundId(), ci::Vec2f(x, y), offset, scale);
+            if(it->layerId())
+            {
+                drawTile(it->layerId(), ci::Vec2f(x, y), offset, scale);
+            }
         }
     }
 }

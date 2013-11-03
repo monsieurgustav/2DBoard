@@ -46,6 +46,10 @@ namespace {
                                       const FW::String& filename,
                                       FW::Action action) override
         {
+            if(action != FW::Actions::Modified)
+            {
+                return;
+            }
             // filename is:
             //  - filename.ext on Windows
             //  - absolutepath/filename.ext on MacOSX

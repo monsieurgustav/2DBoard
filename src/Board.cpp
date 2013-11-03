@@ -21,6 +21,7 @@ Board::Board(int width, int height)
 
 Board::Cell::Cell()
 : mGround(0),
+  mLayer(0),
   mTrigger(0)
 { }
 
@@ -38,6 +39,17 @@ void Board::Cell::setGroundId(int id, bool blocking)
 bool Board::Cell::blocking() const
 {
     return mGround < 0;
+}
+
+int Board::Cell::layerId() const
+{
+    return mLayer;
+}
+        
+void Board::Cell::setLayerId(int id)
+{
+    assert(id > 0);
+    mLayer = id;
 }
 
 int Board::Cell::triggerId() const
