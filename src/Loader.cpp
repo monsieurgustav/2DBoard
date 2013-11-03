@@ -219,7 +219,16 @@ static EventManager::Event loadEvent(std::istream & stream)
         stream >> duration;
         return [duration](ci::app::App *app, Level &level)
         {
-            ev::wait(app, level, duration);
+            ev::wait(app, level, duration, false);
+        };
+    }
+    else if(eventName == "modalWait")
+    {
+        float duration;
+        stream >> duration;
+        return [duration](ci::app::App *app, Level &level)
+        {
+            ev::wait(app, level, duration, true);
         };
     }
     return EventManager::Event();

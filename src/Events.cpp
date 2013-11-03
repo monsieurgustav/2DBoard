@@ -155,8 +155,10 @@ namespace
     class WaitWidget : public IWidget
     {
         ci::Anim<int> timer;
+        bool modal_;
     public:
-        WaitWidget(ci::Timeline & timeline, float duration) : timer(0)
+        WaitWidget(ci::Timeline & timeline, float duration, bool modal)
+         : timer(0), modal_(modal)
         {
             timeline.apply(&timer, 1, duration);
         }
@@ -165,12 +167,18 @@ namespace
         {
             return timer == 0 ? KEEP : REMOVE;
         }
+
+        virtual bool keyDown(ci::app::KeyEvent event) override
+        {
+            return modal_;
+        }
     };
 }
-void ev::wait(ci::app::App * app, Level & level, float duration)
+void ev::wait(ci::app::App * app, Level & level, float duration, bool modal)
 {
     level.pendingWidgets.push_back(std::make_shared<WaitWidget>(app->timeline(),
-                                                                duration));
+                                                                duration,
+                                                                modal));
 }
 
 

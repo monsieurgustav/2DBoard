@@ -46,7 +46,7 @@ namespace ev
     void stopSound(Level & level, const std::string & filename);
 
     // utilities
-    void wait(ci::app::App * app, Level & level, float duration);
+    void wait(ci::app::App * app, Level & level, float duration, bool modal);
 
     void serial(ci::app::App * app, Level & level,
                 std::queue<EventManager::Event> events);
