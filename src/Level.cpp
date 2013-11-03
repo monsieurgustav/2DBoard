@@ -37,7 +37,7 @@ Level & Level::operator=(Level && other)
     player = std::move(other.player);
     drawer = std::move(other.drawer);
     eventManager = std::move(other.eventManager);
-    widgets = std::move(other.widgets);
+    pendingWidgets = std::move(other.widgets);
     return *this;
 }
 

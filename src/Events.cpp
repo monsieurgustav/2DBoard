@@ -120,10 +120,11 @@ void ev::displayImage(ci::app::App * app, Level & level,
 }
 
 
-void ev::playSound(ci::app::App * app, Level & level, const std::string &filename)
+void ev::playSound(ci::app::App * app, Level & level, const std::string &filename, bool loop)
 {
     auto source = ci::audio::load(app->loadAsset(filename));
     auto track = ci::audio::Output::addTrack(source);
+    track->setLooping(loop);
     
     auto found = level.sounds.find(filename);
     if(found != level.sounds.end())

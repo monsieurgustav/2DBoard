@@ -75,7 +75,7 @@ namespace {
 void LabyrinthApp::setup()
 {
     gl::enableAlphaBlending();
-    gl::enableAlphaTest(0.1f);
+    gl::enableAlphaTest(0.01f);
     gl::disableDepthRead();
     gl::disable(GL_MULTISAMPLE);
 

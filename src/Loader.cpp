@@ -183,13 +183,25 @@ static EventManager::Event loadEvent(std::istream & stream)
             level.prepare(app);
         };
     }
+    else if(eventName == "displayImage")
+    {
+        std::string imageName;
+        float duration;
+        stream >> imageName >> duration;
+        return [imageName, duration](ci::app::App *app, Level &level)
+        {
+            ev::displayImage(app, level, imageName, duration);
+        };
+    }
     else if(eventName == "playSound")
     {
         std::string filename;
         stream >> filename;
-        return [filename](ci::app::App * app, Level & level)
+        bool loop = false;
+        stream >> loop;
+        return [filename, loop](ci::app::App * app, Level & level)
         {
-            ev::playSound(app, level, filename);
+            ev::playSound(app, level, filename, loop);
         };
     }
     else if(eventName == "stopSound")
@@ -349,6 +361,10 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
                 if(line[0] == ')' || stream.eof())
                 {
                     break;
+                }
+                if(isComment(line))
+                {
+                    continue;
                 }
                 std::istringstream other(line);
                 s.swap(other);
