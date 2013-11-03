@@ -37,12 +37,12 @@ public:
     /// Bind a tile to a tile id from terrain/actor
     void setTile(int tileId, ci::gl::TextureRef image, int height, int line, int index)
     {
-        setTile(tileId, image, height, line, index, index+1);
+        setTile(tileId, image, height, line, index, index+1, 0.f);
     }
 
     /// Bind a animated tile to a terrain id.
     void setTile(int tileId, ci::gl::TextureRef image, int height,
-                 int line, int begin, int end);
+                 int line, int begin, int end, float duration);
     
     void draw(const Board & terrain, const Actor & actor) const;
 

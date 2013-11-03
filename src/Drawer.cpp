@@ -16,7 +16,8 @@
 
 
 void Drawer::setTile(int tileId, ci::gl::TextureRef image, int height,
-                     int line, int begin, int end)
+                     int line, int begin, int end,
+                     float duration)
 {
     Tile tmp = {image, height, line, begin, end, begin};
     Tile & tile = mIdToTile[tileId] = tmp;
@@ -24,7 +25,7 @@ void Drawer::setTile(int tileId, ci::gl::TextureRef image, int height,
     // Tile & tile = mIdToTile[tileId] = {image, height, begin, end, begin};
     if(end > begin+1)
     {
-        mTimeline->apply(&tile.current, end, MOVE_DURATION).loop();
+        mTimeline->apply(&tile.current, end, duration).loop();
     }
 }
 

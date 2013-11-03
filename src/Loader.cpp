@@ -321,7 +321,10 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
         }
         else
         {
-            drawer.setTile(tileId, tex, tileHeight, tileLine, beginIndex, endIndex);
+            float duration = MOVE_DURATION;
+            s >> duration;
+            drawer.setTile(tileId, tex, tileHeight,
+                           tileLine, beginIndex, endIndex, duration);
         }
     }
 
