@@ -6,6 +6,7 @@
 
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
+#include "cinder/audio/Output.h"
 #include "cinder/ImageIo.h"
 #include "cinder/Tween.h"
 #include "cinder/Timeline.h"
@@ -140,6 +141,13 @@ void LabyrinthApp::update()
 {
     // check file update
     gWatcher.update();
+
+    // sound volume
+    std::for_each(gLevel->sounds.begin(), gLevel->sounds.end(),
+                  [] (decltype(*gLevel->sounds.begin()) &sound)
+                  {
+                      sound.second.first->setVolume(sound.second.second);
+                  });
 
     // include pending widgets
     gLevel->widgets.insert(gLevel->widgets.end(),

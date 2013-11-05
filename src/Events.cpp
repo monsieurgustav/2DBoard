@@ -147,15 +147,16 @@ void ev::playSound(ci::app::App * app, Level & level, const std::string &filenam
     auto track = ci::audio::Output::addTrack(source);
     track->setLooping(loop);
     
+    auto sound = std::make_pair(track, ci::Anim<float>(1.f));
     auto found = level.sounds.find(filename);
     if(found != level.sounds.end())
     {
-        found->second->stop();
-        found->second = track;
+        found->second.first->stop();
+        found->second = sound;
     }
     else
     {
-        level.sounds[filename] = track;
+        level.sounds[filename] = sound;
     }
 }
 
@@ -165,8 +166,28 @@ void ev::stopSound(Level & level, const std::string & filename)
     auto found = level.sounds.find(filename);
     if(found != level.sounds.end())
     {
-        found->second->stop();
+        found->second.first->stop();
         level.sounds.erase(found);
+    }
+}
+
+
+void ev::fadeInSound(ci::app::App * app, Level & level, const std::string & filename, float duration)
+{
+    auto found = level.sounds.find(filename);
+    if(found != level.sounds.end())
+    {
+        app->timeline().apply(&found->second.second, 0.f, 1.f, duration, &ci::easeInOutQuad);
+    }
+}
+
+
+void ev::fadeOutSound(ci::app::App * app, Level & level, const std::string & filename, float duration)
+{
+    auto found = level.sounds.find(filename);
+    if(found != level.sounds.end())
+    {
+        app->timeline().apply(&found->second.second, 0.f, duration, &ci::easeInOutQuad);
     }
 }
 

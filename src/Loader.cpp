@@ -245,6 +245,26 @@ static EventManager::Event loadEvent(std::istream & stream)
             ev::stopSound(level, filename);
         };
     }
+    else if(eventName == "fadeInSound")
+    {
+        std::string filename;
+        float duration = 0.f;
+        stream >> filename >> duration;
+        return [filename, duration](ci::app::App *app, Level & level)
+        {
+            ev::fadeInSound(app, level, filename, duration);
+        };
+    }
+    else if(eventName == "fadeOutSound")
+    {
+        std::string filename;
+        float duration = 0.f;
+        stream >> filename >> duration;
+        return [filename, duration](ci::app::App *app, Level & level)
+        {
+            ev::fadeOutSound(app, level, filename, duration);
+        };
+    }
     else if(eventName == "wait")
     {
         float duration;

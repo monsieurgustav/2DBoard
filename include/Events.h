@@ -30,6 +30,7 @@ namespace ci = cinder;
 
 namespace ev
 {
+    // board
     void setTrigger(Board & board, ci::Vec2i position, int triggerId);
 
     void removeTrigger(Board & board, ci::Vec2i position);
@@ -42,13 +43,19 @@ namespace ev
 
     Level loadLevel(ci::app::App * app, const std::string & filename);
 
+    // image
     void displayImage(ci::app::App * app, Level & level,
                       const std::string & filename, float duration);
 
     void displayPrompt(ci::app::App * app, Level & level,
                       const std::string & filename);
 
+    // sound
     void playSound(ci::app::App * app, Level & level, const std::string & filename, bool loop);
+
+    void fadeInSound(ci::app::App * app, Level & level, const std::string & filename, float duration);
+
+    void fadeOutSound(ci::app::App * app, Level & level, const std::string & filename, float duration);
 
     void stopSound(Level & level, const std::string & filename);
 

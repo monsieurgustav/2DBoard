@@ -27,6 +27,7 @@ namespace cinder {
         class Track;
         typedef std::shared_ptr<Track> TrackRef;
     }
+    template <class T> class Anim;
 }
 namespace ci = cinder;
 
@@ -41,7 +42,8 @@ struct Level
     EventManager eventManager;
     std::deque<IWidgetPtr> widgets;
     std::deque<IWidgetPtr> pendingWidgets;
-    std::unordered_map<std::string, ci::audio::TrackRef> sounds;
+    std::unordered_map<std::string, std::pair<ci::audio::TrackRef,
+                                              ci::Anim<float>>> sounds;
 
     Level(Board &&board, Actor &&player, Drawer &&drawer, EventManager &&mgr);
 

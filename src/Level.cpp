@@ -28,7 +28,7 @@ Level::~Level()
 {
     std::for_each(sounds.begin(), sounds.end(),
                   [] (decltype(*sounds.begin()) & v)
-                  { v.second->stop(); });
+                  { v.second.first->stop(); });
 }
 
 Level & Level::operator=(Level && other)
