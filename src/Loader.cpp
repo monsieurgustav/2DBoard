@@ -146,6 +146,16 @@ static EventManager::Event loadEvent(std::istream & stream)
             ev::setTrigger(level.board, position, newTriggerId);
         };
     }
+    else if(eventName == "removeTrigger")
+    {
+        int posX, posY;
+        stream >> posX >> posY;
+        const auto position = ci::Vec2i(posX, posY);
+        return [position](ci::app::App *app, Level &level)
+        {
+            ev::removeTrigger(level.board, position);
+        };
+    }
     else if(eventName == "setGround")
     {
         int posX, posY, tileId;
@@ -154,6 +164,16 @@ static EventManager::Event loadEvent(std::istream & stream)
         return [position, tileId](ci::app::App *app, Level &level)
         {
             ev::setGround(level.board, position, std::abs(tileId), tileId<0);
+        };
+    }
+    else if(eventName == "setLayer")
+    {
+        int posX, posY, tileId;
+        stream >> posX >> posY >> tileId;
+        const auto position = ci::Vec2i(posX, posY);
+        return [position, tileId](ci::app::App *app, Level &level)
+        {
+            ev::setLayer(level.board, position, tileId);
         };
     }
     else if(eventName == "setPlayerTiles")
@@ -174,8 +194,11 @@ static EventManager::Event loadEvent(std::istream & stream)
         {
             level.destroy(app);
             try {
-                level = std::move(ev::loadLevel(app, levelName));
+                Level tmp(ev::loadLevel(app, levelName));
                 level.source = app->loadAsset(levelName);
+                // this erases the event manager, which holds data of this
+                // event: can't do much after that call.
+                level = std::move(tmp);
             }
             catch (BadFormatException &) {
                 // do nothing
@@ -191,6 +214,15 @@ static EventManager::Event loadEvent(std::istream & stream)
         return [imageName, duration](ci::app::App *app, Level &level)
         {
             ev::displayImage(app, level, imageName, duration);
+        };
+    }
+    else if(eventName == "displayPrompt")
+    {
+        std::string imageName;
+        stream >> imageName;
+        return [imageName](ci::app::App *app, Level &level)
+        {
+            ev::displayPrompt(app, level, imageName);
         };
     }
     else if(eventName == "playSound")

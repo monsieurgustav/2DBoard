@@ -26,6 +26,8 @@ public:
         /// id > 0
         void setTriggerId(int id);
 
+        void removeTrigger();
+
         int groundId() const;
         
         /// id > 0

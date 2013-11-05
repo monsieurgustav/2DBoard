@@ -32,7 +32,11 @@ namespace ev
 {
     void setTrigger(Board & board, ci::Vec2i position, int triggerId);
 
+    void removeTrigger(Board & board, ci::Vec2i position);
+
     void setGround(Board & board, ci::Vec2i position, int tileId, bool blocking);
+
+    void setLayer(Board & board, ci::Vec2i position, int tileId);
 
     void setPlayerTiles(Actor & player, int stillTile, ci::Vec4i movingTiles);
 
@@ -40,6 +44,9 @@ namespace ev
 
     void displayImage(ci::app::App * app, Level & level,
                       const std::string & filename, float duration);
+
+    void displayPrompt(ci::app::App * app, Level & level,
+                      const std::string & filename);
 
     void playSound(ci::app::App * app, Level & level, const std::string & filename, bool loop);
 

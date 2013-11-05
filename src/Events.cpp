@@ -23,9 +23,21 @@ void ev::setTrigger(Board & board, ci::Vec2i position, int triggerId)
 }
 
 
+void ev::removeTrigger(Board & board, ci::Vec2i position)
+{
+    board.cell(position.x, position.y).removeTrigger();
+}
+
+
 void ev::setGround(Board & board, ci::Vec2i position, int tileId, bool blocking)
 {
     board.cell(position.x, position.y).setGroundId(tileId, blocking);
+}
+
+
+void ev::setLayer(Board & board, ci::Vec2i position, int tileId)
+{
+    board.cell(position.x, position.y).setLayerId(tileId);
 }
 
 
@@ -115,8 +127,17 @@ void ev::displayImage(ci::app::App * app, Level & level,
                       const std::string & filename, float duration)
 {
     ci::gl::TextureRef tex = loadTexture(app, filename);
-    IWidget * w = new TimerTextureWidget(app->timeline(), tex, duration);
+    auto w = std::make_shared<TimerTextureWidget>(app->timeline(), tex, duration);
     level.pendingWidgets.push_back(IWidgetPtr(w));
+}
+
+
+void ev::displayPrompt(ci::app::App * app, Level & level,
+                      const std::string & filename)
+{
+    ci::gl::TextureRef tex = loadTexture(app, filename);
+    auto w = std::make_shared<ModalTextureWidget>(tex);
+    level.pendingWidgets.push_back(w);
 }
 
 

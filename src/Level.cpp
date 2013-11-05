@@ -45,7 +45,7 @@ void Level::prepare(ci::app::App * app)
 {
     player.setFinishMoveCallback([app, this] (ci::Vec2i position)
         {
-            int trigger = board .cell(position.x, position.y).triggerId();
+            int trigger = board.cell(position.x, position.y).triggerId();
             eventManager.runEvent(trigger, app, *this);
         });
 

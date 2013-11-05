@@ -22,7 +22,7 @@ Board::Board(int width, int height)
 Board::Cell::Cell()
 : mGround(0),
   mLayer(0),
-  mTrigger(0)
+  mTrigger(-1)
 { }
 
 int Board::Cell::groundId() const
@@ -61,6 +61,11 @@ void Board::Cell::setTriggerId(int id)
 {
     assert(id > 0);
     mTrigger = id;
+}
+
+void Board::Cell::removeTrigger()
+{
+    mTrigger = -1;
 }
 
 unsigned char Board::availableMoves(int x, int y)
