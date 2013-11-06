@@ -38,6 +38,8 @@ public:
         /// id > 0
         void setLayerId(int id);
 
+        void removeLayer();
+
         bool blocking() const;
 
     private:

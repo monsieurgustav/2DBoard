@@ -176,6 +176,16 @@ static EventManager::Event loadEvent(std::istream & stream)
             ev::setLayer(level.board, position, tileId);
         };
     }
+    else if(eventName == "removeLayer")
+    {
+        int posX, posY;
+        stream >> posX >> posY;
+        const auto position = ci::Vec2i(posX, posY);
+        return [position](ci::app::App *app, Level &level)
+        {
+            ev::removeLayer(level.board, position);
+        };
+    }
     else if(eventName == "setPlayerTiles")
     {
         int tileStill, tileUp, tileRight, tileDown, tileLeft;

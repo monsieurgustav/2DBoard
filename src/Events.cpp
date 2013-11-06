@@ -42,6 +42,12 @@ void ev::setLayer(Board & board, ci::Vec2i position, int tileId)
 }
 
 
+void ev::removeLayer(Board & board, ci::Vec2i position)
+{
+    board.cell(position.x, position.y).removeLayer();
+}
+
+
 void ev::setPlayerTiles(Actor & player, int stillTile, ci::Vec4i movingTiles)
 {
     player.setTileId(stillTile, DIR_NONE);

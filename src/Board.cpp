@@ -45,11 +45,16 @@ int Board::Cell::layerId() const
 {
     return mLayer;
 }
-        
+
 void Board::Cell::setLayerId(int id)
 {
     assert(id > 0);
     mLayer = id;
+}
+
+void Board::Cell::removeLayer()
+{
+    mLayer = 0;
 }
 
 int Board::Cell::triggerId() const

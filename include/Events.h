@@ -39,6 +39,8 @@ namespace ev
 
     void setLayer(Board & board, ci::Vec2i position, int tileId);
 
+    void removeLayer(Board & board, ci::Vec2i position);
+
     void setPlayerTiles(Actor & player, int stillTile, ci::Vec4i movingTiles);
 
     Level loadLevel(ci::app::App * app, const std::string & filename);
