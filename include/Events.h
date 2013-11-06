@@ -50,6 +50,10 @@ namespace ev
     void displayPrompt(ci::app::App * app, Level & level,
                       const std::string & filename);
 
+    void fadeInColor(ci::app::App * app, Level & level, ci::Color color, float duration);
+
+    void fadeOutColor(ci::app::App * app, Level & level, ci::Color color, float duration);
+
     // sound
     void playSound(ci::app::App * app, Level & level, const std::string & filename, bool loop);
 

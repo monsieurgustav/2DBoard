@@ -14,6 +14,7 @@
 
 #include "cinder/Timeline.h"
 #include "cinder/gl/Texture.h"
+#include "cinder/gl/GlslProg.h"
 #include "cinder/audio/Output.h"
 
 
@@ -128,7 +129,7 @@ void ev::displayImage(ci::app::App * app, Level & level,
 {
     ci::gl::TextureRef tex = loadTexture(app, filename);
     auto w = std::make_shared<TimerTextureWidget>(app->timeline(), tex, duration);
-    level.pendingWidgets.push_back(IWidgetPtr(w));
+    level.pendingWidgets.push_back(w);
 }
 
 
@@ -137,6 +138,68 @@ void ev::displayPrompt(ci::app::App * app, Level & level,
 {
     ci::gl::TextureRef tex = loadTexture(app, filename);
     auto w = std::make_shared<ModalTextureWidget>(tex);
+    level.pendingWidgets.push_back(w);
+}
+
+
+namespace
+{
+    class SolidColorWidget : public IWidget
+    {
+        static ci::gl::GlslProgRef sProgram;
+        ci::Color mColor;
+        ci::Anim<float> mAlpha;
+
+    public:
+        SolidColorWidget(ci::Color color) : mColor(color)
+        { }
+
+        ci::Anim<float> & alpha()
+        {
+            return mAlpha;
+        }
+
+        virtual State update() override
+        {
+            return mAlpha.isComplete() ? REMOVE : KEEP;
+        }
+
+        virtual void afterDraw(ci::Vec2i windowSize) override
+        {
+            if(!sProgram)
+            {
+                init();
+            }
+            sProgram->bind();
+            sProgram->uniform("color", ci::ColorA(mColor, mAlpha));
+            ci::gl::drawSolidRect(ci::Rectf(-1.f, -1.f, 1.f, 1.f));
+            sProgram->unbind();
+        }
+    private:
+        static void init()
+        {
+            sProgram = ci::gl::GlslProg::create(
+                "void main() { gl_Position = gl_Vertex; }"
+                ,
+                "uniform vec4 color;\n"
+                "void main() { gl_FragColor = color; }");
+        }
+    };
+    ci::gl::GlslProgRef SolidColorWidget::sProgram;
+}
+
+void ev::fadeInColor(ci::app::App * app, Level & level, ci::Color color, float duration)
+{
+    auto w = std::make_shared<SolidColorWidget>(color);
+    app->timeline().apply(&w->alpha(), 0.f, 1.f, duration, &ci::easeInOutQuad);
+    level.pendingWidgets.push_back(w);
+}
+
+
+void ev::fadeOutColor(ci::app::App * app, Level & level, ci::Color color, float duration)
+{
+    auto w = std::make_shared<SolidColorWidget>(color);
+    app->timeline().apply(&w->alpha(), 1.f, 0.f, duration, &ci::easeInOutQuad);
     level.pendingWidgets.push_back(w);
 }
 

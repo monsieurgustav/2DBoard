@@ -225,6 +225,24 @@ static EventManager::Event loadEvent(std::istream & stream)
             ev::displayPrompt(app, level, imageName);
         };
     }
+    else if(eventName == "fadeInColor")
+    {
+        float duration = 0.f;
+        stream >> duration;
+        return [duration](ci::app::App *app, Level & level)
+        {
+            ev::fadeInColor(app, level, ci::Color::black(), duration);
+        };
+    }
+    else if(eventName == "fadeOutColor")
+    {
+        float duration = 0.f;
+        stream >> duration;
+        return [duration](ci::app::App *app, Level & level)
+        {
+            ev::fadeOutColor(app, level, ci::Color::black(), duration);
+        };
+    }
     else if(eventName == "playSound")
     {
         std::string filename;
