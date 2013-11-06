@@ -181,6 +181,12 @@ namespace
             ci::gl::drawSolidRect(ci::Rectf(-1.f, -1.f, 1.f, 1.f));
             sProgram->unbind();
         }
+
+        virtual bool keyDown(ci::app::KeyEvent event) override
+        {
+            // modal
+            return true;
+        }
     private:
         static void init()
         {
@@ -197,7 +203,7 @@ namespace
 void ev::fadeInColor(ci::app::App * app, Level & level, ci::Color color, float duration)
 {
     auto w = std::make_shared<SolidColorWidget>(color);
-    app->timeline().apply(&w->alpha(), 0.f, 1.f, duration, &ci::easeInOutQuad);
+    app->timeline().apply(&w->alpha(), 1.f, 0.f, duration, &ci::easeInOutQuad);
     level.pendingWidgets.push_back(w);
 }
 
@@ -205,7 +211,7 @@ void ev::fadeInColor(ci::app::App * app, Level & level, ci::Color color, float d
 void ev::fadeOutColor(ci::app::App * app, Level & level, ci::Color color, float duration)
 {
     auto w = std::make_shared<SolidColorWidget>(color);
-    app->timeline().apply(&w->alpha(), 1.f, 0.f, duration, &ci::easeInOutQuad);
+    app->timeline().apply(&w->alpha(), 0.f, 1.f, duration, &ci::easeInOutQuad);
     level.pendingWidgets.push_back(w);
 }
 
