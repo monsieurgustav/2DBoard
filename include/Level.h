@@ -44,6 +44,7 @@ struct Level
     std::deque<IWidgetPtr> pendingWidgets;
     std::unordered_map<std::string, std::pair<ci::audio::TrackRef,
                                               ci::Anim<float>>> sounds;
+    int current;
 
     Level(Board &&board, Actor &&player, Drawer &&drawer, EventManager &&mgr);
 

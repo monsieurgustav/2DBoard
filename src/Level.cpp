@@ -13,7 +13,7 @@
 
 
 Level::Level(Board && b, Actor && p, Drawer && d, EventManager && m)
-: board(b), player(p), drawer(d), eventManager(m)
+: board(b), player(p), drawer(d), eventManager(m), current(0)
 { }
 
 Level::Level(Level && other)
@@ -21,7 +21,8 @@ Level::Level(Level && other)
   player(std::move(other.player)),
   drawer(std::move(other.drawer)),
   eventManager(std::move(other.eventManager)),
-  widgets(std::move(other.widgets))
+  widgets(std::move(other.widgets)),
+  current(0)
 { }
 
 Level::~Level()
@@ -38,6 +39,7 @@ Level & Level::operator=(Level && other)
     drawer = std::move(other.drawer);
     eventManager = std::move(other.eventManager);
     pendingWidgets = std::move(other.widgets);
+    ++current;
     return *this;
 }
 

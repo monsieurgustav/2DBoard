@@ -289,81 +289,122 @@ void ev::wait(ci::app::App * app, Level & level, float duration, bool modal)
 
 namespace
 {
+#define SERIAL_FORWARD_CALL(FUNCNAME, PARAMTYPE, PARAMNAME)                    \
+    virtual void FUNCNAME(PARAMTYPE PARAMNAME) override                        \
+    {                                                                          \
+        std::for_each(children.begin(), children.end(),                        \
+                      [PARAMNAME] (IWidgetPtr &w) { w->FUNCNAME(PARAMNAME); });\
+    }
+
+#define SERIAL_FORWARD_CALL_FILTERED(FUNCNAME, PARAMTYPE, PARAMNAME)           \
+    virtual bool FUNCNAME(PARAMTYPE PARAMNAME) override                        \
+    {                                                                          \
+        if(std::any_of(children.begin(), children.end(),                       \
+                       [PARAMNAME] (IWidgetPtr &w) { return w->FUNCNAME(PARAMNAME); })) \
+        {                                                                      \
+            return true;                                                       \
+        }                                                                      \
+        return false;                                                          \
+    }
+
     class SerialWidget : public IWidget
     {
         ci::app::App * app;
         Level & level;
 
         std::queue<EventManager::Event> events;
-        std::deque<std::weak_ptr<IWidget>> activeWidgets;
+        std::deque<IWidgetPtr> children;
 
     public:
 
         SerialWidget(ci::app::App * a, Level & l,
-                     const std::queue<EventManager::Event> &evts,
-                     size_t firstWidget)
-        : app(a), level(l), events(evts)
-        {
-            trackWidgetFrom(firstWidget);
-        }
+                     std::queue<EventManager::Event> evts,
+                     std::deque<IWidgetPtr> widgets)
+        : app(a), level(l), events(std::move(evts)),
+          children(std::move(widgets))
+        {}
 
         virtual State update() override
         {
-            if(std::all_of(activeWidgets.begin(), activeWidgets.end(),
-                           [](const std::weak_ptr<IWidget> &w)
-                           { return w.expired(); }))
-            {
-                activeWidgets.clear();
+            // forward update call
+            auto newEnd = std::remove_if(children.begin(), children.end(),
+                                         [] (IWidgetPtr &w)
+                                         {
+                                             return w->update() == IWidget::REMOVE;
+                                         });
+            children.erase(newEnd, children.end());
 
-                // exec next events if the previous one expired.
-                while(!events.empty())
+            if(!children.empty())
+            {
+                return KEEP;
+            }
+
+            // exec next events
+            exec(app, level, events, children);
+            return children.empty() ? REMOVE : KEEP;
+        }
+
+        SERIAL_FORWARD_CALL(beforeDraw, cinder::Vec2i, windowSize)
+        SERIAL_FORWARD_CALL(afterDraw, cinder::Vec2i, windowSize)
+        SERIAL_FORWARD_CALL_FILTERED(keyDown, ci::app::KeyEvent, event)
+        SERIAL_FORWARD_CALL_FILTERED(keyUp, ci::app::KeyEvent, event)
+        SERIAL_FORWARD_CALL_FILTERED(mouseDown, ci::app::MouseEvent, event)
+        SERIAL_FORWARD_CALL_FILTERED(mouseUp, ci::app::MouseEvent, event)
+        SERIAL_FORWARD_CALL_FILTERED(mouseWheel, ci::app::MouseEvent, event)
+        SERIAL_FORWARD_CALL_FILTERED(mouseMove, ci::app::MouseEvent, event)
+        SERIAL_FORWARD_CALL_FILTERED(mouseDrag, ci::app::MouseEvent, event)
+
+        static void exec(ci::app::App * app, Level & level,
+                         std::queue<EventManager::Event> & events,
+                         std::deque<IWidgetPtr> & newWidgets)
+        {
+            while(!events.empty())
+            {
+                const auto event = events.front();
+                events.pop();
+                const auto previousLevel = level.current;
+                const auto previousSize = level.pendingWidgets.size();
+                event(app, level);  // event call
+                const auto currentLevel = level.current;
+                const auto currentSize = level.pendingWidgets.size();
+                if(currentLevel != previousLevel)
                 {
-                    const auto event = events.front();
-                    events.pop();
-                    const auto previousSize = level.pendingWidgets.size();
-                    event(app, level);  // event call
-                    const auto currentSize = level.pendingWidgets.size();
-                    if(currentSize > previousSize)
-                    {
-                        trackWidgetFrom(previousSize);
-                        return KEEP;
-                    }
+                    return;
+                }
+                if(currentSize > previousSize)
+                {
+                    auto beginNew = level.pendingWidgets.begin()+previousSize;
+                    auto endNew = level.pendingWidgets.end();
+                    newWidgets.insert(newWidgets.end(), beginNew, endNew);
+                    level.pendingWidgets.erase(beginNew, endNew);
+                    return;
                 }
             }
-            return events.empty() ? REMOVE : KEEP;
-        }
-
-        virtual void afterDraw(cinder::Vec2i) override
-        {
-
-        }
-
-        void trackWidgetFrom(size_t index)
-        {
-            assert(index < level.pendingWidgets.size());
-            activeWidgets.insert(activeWidgets.end(),
-                                 level.pendingWidgets.begin()+index,
-                                 level.pendingWidgets.end());
         }
     };
+
+#undef SERIAL_FORWARD_CALL
+#undef SERIAL_FORWARD_CALL_FILTERED
 }
+
 void ev::serial(ci::app::App * app, Level & level,
                 std::queue<EventManager::Event> events)
 {
-    while(!events.empty())
+    std::deque<IWidgetPtr> newWidgets;
+    SerialWidget::exec(app, level, events, newWidgets);
+    if(!newWidgets.empty())
     {
-        auto event = events.front();
-        events.pop();
-        const auto previousSize = level.pendingWidgets.size();
-        event(app, level);  // event call
-        const auto currentSize = level.pendingWidgets.size();
-        if(currentSize > previousSize)
-        {
-            auto w = std::make_shared<SerialWidget>(app, level,
-                                                    std::move(events),
-                                                    previousSize);
-            level.pendingWidgets.push_back(w);
-            return;
-        }
+        // The serial widget takes ownership of pending widgets.
+        // It is responsible for calling updates, etc.
+
+        // Rational: serial widget update must be called after
+        // its children widget updates, or it may be 1 frame
+        // late.
+        // Include the updates of children widget in the parent
+        // widget is the adopted solution.
+        auto w = std::make_shared<SerialWidget>(app, level,
+                                                std::move(events),
+                                                std::move(newWidgets));
+        level.pendingWidgets.push_back(w);
     }
 }
