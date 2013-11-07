@@ -78,6 +78,7 @@ void Drawer::draw(const Board &terrain, const Actor &actor) const
     {
         viewSize.y = (viewSize.y * mWindowSize.y)/mWindowSize.x;
     }
+    viewSize = min(viewSize, terrain.size());
 
     // select a view (scroll)
     const auto scrollOffset = positionToScrollOffset(actor.logicalPosition(),
