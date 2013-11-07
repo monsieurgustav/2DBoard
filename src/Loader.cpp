@@ -317,7 +317,8 @@ static EventManager::Event loadEvent(std::istream & stream)
 
 static bool isComment(const std::string & line)
 {
-    return line.empty() || line[0] == '#';
+    return line.empty() || line[0] == '\r'
+                        || line[0] == '#';
 }
 
 
