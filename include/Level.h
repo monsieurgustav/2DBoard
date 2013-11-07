@@ -23,14 +23,14 @@ namespace cinder {
     namespace app {
         class App;
     }
-    namespace audio {
-        class Track;
-        typedef std::shared_ptr<Track> TrackRef;
-    }
     template <class T> class Anim;
 }
 namespace ci = cinder;
 
+namespace FMOD {
+    class Sound;
+    class Channel;
+}
 
 struct Level
 {
@@ -42,8 +42,14 @@ struct Level
     EventManager eventManager;
     std::deque<IWidgetPtr> widgets;
     std::deque<IWidgetPtr> pendingWidgets;
-    std::unordered_map<std::string, std::pair<ci::audio::TrackRef,
-                                              ci::Anim<float>>> sounds;
+
+    struct Audio
+    {
+        FMOD::Sound * sound;
+        FMOD::Channel * channel;
+        ci::Anim<float> volume;
+    };
+    std::unordered_map<std::string, Audio> sounds;
     int current;
 
     Level(Board &&board, Actor &&player, Drawer &&drawer, EventManager &&mgr);

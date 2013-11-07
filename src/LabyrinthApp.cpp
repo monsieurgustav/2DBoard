@@ -6,12 +6,13 @@
 
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
-#include "cinder/audio/Output.h"
 #include "cinder/ImageIo.h"
 #include "cinder/Tween.h"
 #include "cinder/Timeline.h"
 
 #include "FileWatcher/FileWatcher.h"
+
+#include "fmod.hpp"
 
 using namespace ci;
 using namespace ci::app;
@@ -169,7 +170,7 @@ void LabyrinthApp::update()
     std::for_each(gLevel->sounds.begin(), gLevel->sounds.end(),
                   [] (decltype(*gLevel->sounds.begin()) &sound)
                   {
-                      sound.second.first->setVolume(sound.second.second);
+                      sound.second.channel->setVolume(sound.second.volume);
                   });
 
     // include pending widgets

@@ -15,7 +15,8 @@
 #include "cinder/Timeline.h"
 #include "cinder/gl/Texture.h"
 #include "cinder/gl/GlslProg.h"
-#include "cinder/audio/Output.h"
+
+#include "fmod.hpp"
 
 
 void ev::setTrigger(Board & board, ci::Vec2i position, int triggerId)
@@ -216,22 +217,48 @@ void ev::fadeOutColor(ci::app::App * app, Level & level, ci::Color color, float 
 }
 
 
+static FMOD::System * gFMODSystem = nullptr;
+static void initFMOD()
+{
+    assert(!gFMODSystem);
+    FMOD::System_Create(&gFMODSystem);
+    gFMODSystem->init(32, FMOD_INIT_NORMAL, nullptr);
+}
+
 void ev::playSound(ci::app::App * app, Level & level, const std::string &filename, bool loop)
 {
-    auto source = ci::audio::load(app->loadAsset(filename));
-    auto track = ci::audio::Output::addTrack(source);
-    track->setLooping(loop);
-    
-    auto sound = std::make_pair(track, ci::Anim<float>(1.f));
-    auto found = level.sounds.find(filename);
-    if(found != level.sounds.end())
+    if(!gFMODSystem)
     {
-        found->second.first->stop();
-        found->second = sound;
+        initFMOD();
+    }
+    
+    auto found = level.sounds.find(filename);
+
+    FMOD::Sound * sound;
+    if(found == level.sounds.end())
+    {
+        gFMODSystem->createSound(app->getAssetPath(filename).string().c_str(),
+                                 FMOD_DEFAULT | (loop ? FMOD_LOOP_NORMAL : 0),
+                                 NULL,
+                                 &sound);
     }
     else
     {
-        level.sounds[filename] = sound;
+        sound = found->second.sound;
+    }
+
+    FMOD::Channel * channel;
+    gFMODSystem->playSound(FMOD_CHANNEL_FREE, sound, false, &channel);
+
+    Level::Audio audio = {sound, channel, ci::Anim<float>(1.f)};
+    if(found != level.sounds.end())
+    {
+        found->second.channel->stop();
+        found->second = audio;
+    }
+    else
+    {
+        level.sounds[filename] = audio;
     }
 }
 
@@ -241,7 +268,8 @@ void ev::stopSound(Level & level, const std::string & filename)
     auto found = level.sounds.find(filename);
     if(found != level.sounds.end())
     {
-        found->second.first->stop();
+        found->second.channel->stop();
+        found->second.sound->release();
         level.sounds.erase(found);
     }
 }
@@ -252,7 +280,7 @@ void ev::fadeInSound(ci::app::App * app, Level & level, const std::string & file
     auto found = level.sounds.find(filename);
     if(found != level.sounds.end())
     {
-        app->timeline().apply(&found->second.second, 0.f, 1.f, duration, &ci::easeInOutQuad);
+        app->timeline().apply(&found->second.volume, 0.f, 1.f, duration, &ci::easeInOutQuad);
     }
 }
 
@@ -262,7 +290,7 @@ void ev::fadeOutSound(ci::app::App * app, Level & level, const std::string & fil
     auto found = level.sounds.find(filename);
     if(found != level.sounds.end())
     {
-        app->timeline().apply(&found->second.second, 0.f, duration, &ci::easeInOutQuad);
+        app->timeline().apply(&found->second.volume, 0.f, duration, &ci::easeInOutQuad);
     }
 }
 

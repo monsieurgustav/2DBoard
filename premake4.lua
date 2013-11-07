@@ -18,16 +18,19 @@ solution "LabyrinthBoard"
     includedirs {"include",
                  "cinder/include",
                  "cinder/boost",
+                 "cinder/blocks/FMOD/include",
                  "simplefilewatcher/includes"}
     
     libdirs {"cinder/lib"}
     configuration "windows"
       files "simplefilewatcher/source/FileWatcherWin32.cpp"
-      libdirs {"cinder/lib/msw"}
+      libdirs {"cinder/lib/msw",
+               "cinder/blocks/FMOD/lib/msw"}
+      links "fmodex_vc"
       buildoptions {"-Zm150", "-FILabyrinth_Prefix.h"}
     configuration "macos"
       files "simplefilewatcher/source/FileWatcherOSX.cpp"
-      libdirs {"cinder/lib/macos"}
+      libdirs "cinder/lib/macos"
     
     configuration "Debug"
       defines {"DEBUG", "_DEBUG"}

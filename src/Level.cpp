@@ -9,7 +9,8 @@
 #include "Level.h"
 
 #include "cinder/app/App.h"
-#include "cinder/audio/Output.h"
+
+#include "fmod.hpp"
 
 
 Level::Level(Board && b, Actor && p, Drawer && d, EventManager && m)
@@ -29,7 +30,10 @@ Level::~Level()
 {
     std::for_each(sounds.begin(), sounds.end(),
                   [] (decltype(*sounds.begin()) & v)
-                  { v.second.first->stop(); });
+                  {
+                    v.second.channel->stop();
+                    v.second.sound->release();
+                  });
 }
 
 Level & Level::operator=(Level && other)
