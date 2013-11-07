@@ -24,7 +24,7 @@
 		6AB5ADE61823FD100019295C /* FileWatcherOSX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6AB5ADE41823FD100019295C /* FileWatcherOSX.cpp */; };
 		6ACED74E17FF7F960068294E /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED74C17FF7F960068294E /* EventManager.cpp */; };
 		6ACED7531800592E0068294E /* Drawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED7521800592E0068294E /* Drawer.cpp */; };
-		6AEA3683182C1F19000E3685 /* libfmodex.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6AEA3680182C1BC8000E3685 /* libfmodex.dylib */; };
+		6AEA3683182C1F19000E3685 /* libfmodex.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 6AEA3680182C1BC8000E3685 /* libfmodex.dylib */; };
 		6AEA3687182C2238000E3685 /* assets in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6AEA3684182C21FC000E3685 /* assets */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		DD101F25E0DF40DDBFE769A7 /* LabyrinthApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 315650AFFF71481AB15B1006 /* LabyrinthApp.cpp */; };
@@ -55,25 +55,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		6AEA3682182C1EFC000E3685 /* CopyFiles */ = {
+		6AEA3682182C1EFC000E3685 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				6AEA3683182C1F19000E3685 /* libfmodex.dylib in CopyFiles */,
+				6AEA3683182C1F19000E3685 /* libfmodex.dylib in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		6AEA3686182C222D000E3685 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
 				6AEA3687182C2238000E3685 /* assets in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -266,7 +267,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				6AEA3682182C1EFC000E3685 /* CopyFiles */,
+				6AEA3682182C1EFC000E3685 /* Copy Files */,
 				6AEA3686182C222D000E3685 /* CopyFiles */,
 			);
 			buildRules = (

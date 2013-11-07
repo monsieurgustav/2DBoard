@@ -145,7 +145,7 @@ void LabyrinthApp::keyDown(KeyEvent event)
 void LabyrinthApp::keyUp(KeyEvent event)
 {
     if(std::any_of(gLevel->widgets.begin(), gLevel->widgets.end(),
-                   [&event] (IWidgetPtr &w) { return w->keyDown(event); }))
+                   [&event] (IWidgetPtr &w) { return w->keyUp(event); }))
     {
         return;
     }

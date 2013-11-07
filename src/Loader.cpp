@@ -402,7 +402,7 @@ Level loadFrom(ci::app::App * app, ci::DataSourceRef input)
         }
         else
         {
-            float duration = MOVE_DURATION;
+            float duration = 2.f * MOVE_DURATION;
             s >> duration;
             drawer.setTile(tileId, tex, tileHeight,
                            tileLine, beginIndex, endIndex, duration);

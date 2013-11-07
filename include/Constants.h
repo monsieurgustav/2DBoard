@@ -29,6 +29,6 @@ static Direction reverse(Direction v)
 
 /// How long to move to one tile.
 const float MOVE_DURATION = .5f;
-const float SCROLL_DURATION = .4f;
+const float SCROLL_DURATION = .1f;
 
 #endif
