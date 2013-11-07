@@ -25,13 +25,17 @@ FW::FileWatcher gWatcher;
 class LabyrinthApp : public AppNative
 {
 public:
-	void setup();
-    void shutdown();
-	void keyDown(KeyEvent event);
-	void keyUp(KeyEvent event);
+    virtual void prepareSettings(Settings *settings) override;
+    virtual void setup() override;
+    virtual void shutdown() override;
+    virtual void keyDown(KeyEvent event) override;
+    virtual void keyUp(KeyEvent event) override;
     virtual void resize() override;
-	void update();
-	void draw();
+    virtual void update() override;
+    virtual void draw() override;
+
+private:
+    void setupGL() const;
 };
 
 namespace {
@@ -73,12 +77,14 @@ namespace {
     };
 }
 
+void LabyrinthApp::prepareSettings(Settings *settings)
+{
+    settings->enablePowerManagement(false);
+}
+
 void LabyrinthApp::setup()
 {
-    gl::enableAlphaBlending();
-    gl::enableAlphaTest(0.01f);
-    gl::disableDepthRead();
-    gl::disable(GL_MULTISAMPLE);
+    setupGL();
 
     const auto startLevel = loadAsset("start.lvl");
 
@@ -88,6 +94,14 @@ void LabyrinthApp::setup()
 
     const auto assetPath = startLevel->getFilePath().parent_path();
     gWatcher.addWatch(assetPath.string(), new LevelWatch(this));
+}
+
+void LabyrinthApp::setupGL() const
+{
+    gl::enableAlphaBlending();
+    gl::enableAlphaTest(0.1f);
+    gl::disableDepthRead();
+    gl::disable(GL_MULTISAMPLE);
 }
 
 void LabyrinthApp::shutdown()
@@ -118,6 +132,12 @@ void LabyrinthApp::keyDown(KeyEvent event)
         case KeyEvent::KEY_RIGHT:
             gActorDirection = DIR_RIGHT;
             break;
+        case KeyEvent::KEY_f:
+            const auto isFS = isFullScreen();
+            if(isFS) showCursor();
+            else     hideCursor();
+            setFullScreen(!isFS);
+            break;
     }
 }
 
@@ -134,6 +154,9 @@ void LabyrinthApp::keyUp(KeyEvent event)
 
 void LabyrinthApp::resize()
 {
+    // toggle full screen breaks the GL state (on Windows)
+    setupGL();
+
     gLevel->drawer.setWindowSize(getWindowSize());
 }
 
@@ -179,7 +202,7 @@ void LabyrinthApp::update()
 
 void LabyrinthApp::draw()
 {
-	gl::clear( Color( 0, 0, 0 ) );
+    gl::clear( Color( 0, 0, 0 ) );
 
     std::for_each(gLevel->widgets.begin(), gLevel->widgets.end(),
                   [this] (IWidgetPtr &w) { w->beforeDraw(getWindowSize()); });
@@ -190,4 +213,4 @@ void LabyrinthApp::draw()
                   [this] (IWidgetPtr &w) { w->afterDraw(getWindowSize()); });
 }
 
-CINDER_APP_NATIVE( LabyrinthApp, RendererGl(RendererGl::AA_NONE) )
+CINDER_APP_NATIVE( LabyrinthApp, RendererGl )
