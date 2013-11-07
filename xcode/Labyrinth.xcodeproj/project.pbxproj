@@ -24,6 +24,8 @@
 		6AB5ADE61823FD100019295C /* FileWatcherOSX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6AB5ADE41823FD100019295C /* FileWatcherOSX.cpp */; };
 		6ACED74E17FF7F960068294E /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED74C17FF7F960068294E /* EventManager.cpp */; };
 		6ACED7531800592E0068294E /* Drawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6ACED7521800592E0068294E /* Drawer.cpp */; };
+		6AEA3683182C1F19000E3685 /* libfmodex.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6AEA3680182C1BC8000E3685 /* libfmodex.dylib */; };
+		6AEA3687182C2238000E3685 /* assets in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6AEA3684182C21FC000E3685 /* assets */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		DD101F25E0DF40DDBFE769A7 /* LabyrinthApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 315650AFFF71481AB15B1006 /* LabyrinthApp.cpp */; };
 /* End PBXBuildFile section */
@@ -51,6 +53,29 @@
 			remoteInfo = cinder_iphone_sim;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6AEA3682182C1EFC000E3685 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				6AEA3683182C1F19000E3685 /* libfmodex.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AEA3686182C222D000E3685 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				6AEA3687182C2238000E3685 /* assets in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0091D8F80E81B9330029341E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
@@ -85,6 +110,8 @@
 		6ACED7571801CB570068294E /* Events.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Events.h; path = ../include/Events.h; sourceTree = "<group>"; };
 		6ACED75A1801D2A10068294E /* IWidget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IWidget.h; path = ../include/IWidget.h; sourceTree = "<group>"; };
 		6ACED75C18035A1A0068294E /* Helpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Helpers.h; path = ../include/Helpers.h; sourceTree = "<group>"; };
+		6AEA3680182C1BC8000E3685 /* libfmodex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfmodex.dylib; path = ../cinder/blocks/FMOD/lib/macosx/libfmodex.dylib; sourceTree = "<group>"; };
+		6AEA3684182C21FC000E3685 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../assets; sourceTree = "<group>"; };
 		726D2348FA0B4C6D811A75B2 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Labyrinth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Labyrinth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE1A1C7C16A043D1A5596514 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
@@ -169,6 +196,7 @@
 		29B97314FDCFA39411CA2CEA /* Labyrinth */ = {
 			isa = PBXGroup;
 			children = (
+				6AEA3684182C21FC000E3685 /* assets */,
 				01B97315FEAEA392516A2CEA /* Blocks */,
 				29B97315FDCFA39411CA2CEA /* Headers */,
 				080E96DDFE201D6D7F000001 /* Source */,
@@ -211,6 +239,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6AEA3680182C1BC8000E3685 /* libfmodex.dylib */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
@@ -237,6 +266,8 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				6AEA3682182C1EFC000E3685 /* CopyFiles */,
+				6AEA3686182C222D000E3685 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -355,7 +386,14 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					../cinder/blocks/FMOD/lib/macosx,
+				);
+				OTHER_LDFLAGS = (
+					"\"$(CINDER_PATH)/lib/libcinder_d.a\"",
+					../cinder/blocks/FMOD/lib/macosx/libfmodex.dylib,
+				);
 				PRODUCT_NAME = Labyrinth;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
@@ -377,7 +415,14 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					../cinder/blocks/FMOD/lib/macosx,
+				);
+				OTHER_LDFLAGS = (
+					"\"$(CINDER_PATH)/lib/libcinder.a\"",
+					../cinder/blocks/FMOD/lib/macosx/libfmodex.dylib,
+				);
 				PRODUCT_NAME = Labyrinth;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = ./build;
@@ -389,7 +434,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CINDER_PATH = ../../cinder_0.8.5_mac;
+				CINDER_PATH = ../cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -397,6 +442,7 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(CINDER_PATH)/boost\"",
 					../simplefilewatcher/includes,
+					../cinder/blocks/FMOD/include,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -409,7 +455,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CINDER_PATH = ../../cinder_0.8.5_mac;
+				CINDER_PATH = ../cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -417,6 +463,7 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(CINDER_PATH)/boost\"",
 					../simplefilewatcher/includes,
+					../cinder/blocks/FMOD/include,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
